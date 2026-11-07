@@ -88,24 +88,6 @@ export function SmartLinkRows() {
   );
 }
 
-/** IMG-04 : la courbe d'un clip botté, vue par le détecteur. */
-export function FraudCurve() {
-  return (
-    <div className="relative h-full w-full p-8">
-      <svg viewBox="0 0 800 360" className="h-full w-full" role="img" aria-label="Courbe d'un clip avec un pic de vues artificielles détecté">
-        {[60, 150, 240, 330].map((y) => <line key={y} x1="0" x2="800" y1={y} y2={y} stroke="#ffffff" strokeOpacity="0.06" />)}
-        <path d="M0 330 C80 300 140 280 210 268 S330 250 380 246 L392 70 C460 64 600 60 800 58" fill="none" stroke="#ff453a" strokeWidth="3" />
-        <path d="M0 330 C120 270 240 230 360 214 S620 190 800 184" fill="none" stroke="#2997ff" strokeWidth="2.5" strokeDasharray="6 7" />
-        <circle cx="392" cy="70" r="7" fill="#ff453a" />
-        <rect x="412" y="40" width="300" height="56" rx="16" fill="#1c1c1e" />
-        <text x="432" y="65" fill="#ff453a" fontSize="16" fontWeight="600">+44 845 vues en 1 h</text>
-        <text x="432" y="85" fill="#a1a1a6" fontSize="14">0 like supplémentaire · score 90/100</text>
-        <text x="600" y="210" fill="#2997ff" fontSize="14">courbe organique</text>
-      </svg>
-    </div>
-  );
-}
-
 /** IMG-05 : l'espace d'un clippeur sur téléphone. */
 export function ClipperPhone() {
   return (

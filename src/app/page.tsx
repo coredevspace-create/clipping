@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ChaosStack, ClipperPhone, CtaGlow, FraudCurve, HeroPhones, SmartLinkRows } from "@/components/landing/visuals";
+import { FraudShowcase } from "@/components/landing/fraud-showcase";
+import { ChaosStack, ClipperPhone, CtaGlow, HeroPhones, SmartLinkRows } from "@/components/landing/visuals";
 import { currentUser } from "@/lib/auth";
 import { PLANS } from "@/lib/config";
 import { IMAGES } from "@/lib/images";
@@ -162,8 +163,8 @@ export default async function Home() {
         <p className="mx-auto mt-4 max-w-[620px] text-[19px] leading-snug text-[#a1a1a6] sm:text-[21px]">
           Pics brutaux, vues sans likes, audience hors cible, vidéo réclamée. Chaque clip suspect est expliqué, et n&apos;est jamais payé sans ton accord.
         </p>
-        <div className="mx-auto mt-14 h-[300px] max-w-[1080px] overflow-hidden rounded-[28px] bg-[#0b0b0d] sm:h-[460px]">
-          <Visual src={IMAGES.antiFraude} alt="Des particules lumineuses filtrées, les rouges sont arrêtées" fallback={<FraudCurve />} />
+        <div className="mx-auto mt-14 max-w-[1080px]">
+          <FraudShowcase />
         </div>
         <div className="mx-auto mt-10 grid max-w-[1080px] gap-4 text-left sm:grid-cols-2 lg:grid-cols-4">
           {[

@@ -6,7 +6,7 @@ export const IMAGES: Record<"hero" | "probleme" | "lienIntelligent" | "antiFraud
   hero: "/images/hero.webp", // IMG-01
   probleme: "/images/probleme.webp", // IMG-02
   lienIntelligent: "/images/lien-intelligent.webp", // IMG-03
-  antiFraude: "/images/anti-fraude.webp", // IMG-04
+  antiFraude: null, // remplacée par un graphique (components/landing/fraud-showcase.tsx)
   clippeuse: "/images/clippeuse.webp", // IMG-05
   cta: "/images/cta.webp", // IMG-06
   missions: "/images/missions.webp", // IMG-07
