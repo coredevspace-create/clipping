@@ -38,8 +38,11 @@ export default async function Page({ params, searchParams }: { params: Promise<{
           <label className="flex items-start gap-3 pt-2 text-sm">
             <input type="checkbox" name="requireVerifiedAccounts" defaultChecked={w.requireVerifiedAccounts} className="mt-0.5 h-4 w-4" />
             <span>
-              <strong>Exiger un compte vérifié</strong> pour soumettre un clip TikTok, Instagram ou YouTube.
-              <span className="block text-xs text-zinc-500">Le clippeur doit connecter son compte : ses vues sont lues directement chez la plateforme et il ne peut pas réclamer la vidéo de quelqu&apos;un d&apos;autre.</span>
+              <strong>Refuser les clips non vérifiables</strong>
+              <span className="block text-xs text-zinc-500">
+                Par défaut, un clip n&apos;est accepté que si son code personnel est dans la description (YouTube, TikTok, X) ou si le compte est connecté.
+                Cochée, cette option refuse aussi les clips dont la propriété ne peut pas être vérifiée (ex. Instagram sans compte connecté).
+              </span>
             </span>
           </label>
         </div>

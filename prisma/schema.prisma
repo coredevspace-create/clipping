@@ -17,6 +17,8 @@ model User {
   passwordHash String
   /// CREATOR | CLIPPER : détermine l'accueil et la navigation (un compte peut faire les deux)
   role         String             @default("CREATOR")
+  /// Code personnel à mettre dans la description des vidéos pour prouver qu'elles sont à soi (ex. cs7k2p)
+  verifyCode   String?            @unique
   createdAt    DateTime           @default(now())
   workspaces   Workspace[]
   memberships  Membership[]
@@ -217,6 +219,12 @@ model Clip {
   ownershipVerified Boolean?
   /// Part des vues venant des pays francophones ciblés (0..1), si la plateforme la fournit
   audienceShare     Float?
+  /// Comment la propriété a été prouvée : OAUTH (compte connecté) | CODE (code dans la description)
+  ownershipMethod   String?
+  /// Aperçu de la vidéo (miniature, légende, compte qui l'a publiée)
+  thumbnailUrl      String?
+  caption           String?
+  authorHandle      String?
   paidViews         Int            @default(0)
   paidCents         Int            @default(0)
   createdAt         DateTime       @default(now())

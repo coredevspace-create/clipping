@@ -20,6 +20,8 @@ export type FetchResult = {
   ownershipVerified: boolean | null;
   /** part des vues venant des pays ciblés (0..1), si disponible */
   audienceShare: number | null;
+  /** aperçu de la vidéo, si la plateforme le fournit */
+  meta?: { caption?: string | null; author?: string | null; thumbnailUrl?: string | null };
 };
 
 /** Renvoie null si la plateforme ne peut pas être interrogée dans ce contexte (pas de clé, pas de compte…). */

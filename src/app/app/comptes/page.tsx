@@ -5,6 +5,8 @@ import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { dateFr } from "@/lib/format";
 import { OAUTH_PLATFORMS, PROVIDERS } from "@/lib/oauth/providers";
+import { ensureVerifyCode } from "@/lib/verify";
+import { VerifyCode } from "@/components/verify-code";
 
 export const metadata = { title: "Comptes connectés" };
 
@@ -17,7 +19,7 @@ const WHY: Record<string, string> = {
 export default async function Page({ searchParams }: { searchParams: Promise<{ erreur?: string; ok?: string }> }) {
   const user = await requireUser();
   const sp = await searchParams;
-  const accounts = await db.connectedAccount.findMany({ where: { userId: user.id } });
+  const [accounts, code] = await Promise.all([db.connectedAccount.findMany({ where: { userId: user.id } }), ensureVerifyCode(user.id)]);
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -26,6 +28,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ e
         subtitle="Connecte tes comptes pour que tes vues soient vérifiées automatiquement. Les créateurs privilégient les clippeurs vérifiés."
       />
       <Flash sp={sp} />
+      <div className="mb-6"><VerifyCode code={code} /></div>
       <div className="space-y-4">
         {OAUTH_PLATFORMS.map((p) => {
           const provider = PROVIDERS[p];

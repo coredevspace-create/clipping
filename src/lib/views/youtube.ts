@@ -12,7 +12,7 @@ export const youtubeProvider: StatsProvider = async ({ externalId, account }) =>
   const res = await fetch(url, { cache: "no-store", headers: !key && account ? { Authorization: `Bearer ${account.accessToken}` } : {} });
   if (!res.ok) throw new Error(`YouTube API ${res.status}`);
   const data = (await res.json()) as {
-    items?: { statistics?: Record<string, string>; snippet?: { publishedAt?: string; channelId?: string } }[];
+    items?: { statistics?: Record<string, string>; snippet?: { publishedAt?: string; channelId?: string; title?: string; description?: string; channelTitle?: string; thumbnails?: Record<string, { url: string }> } }[];
   };
   const item = data.items?.[0];
   if (!item) throw new Error("Vidéo YouTube introuvable (supprimée ou privée).");
@@ -38,6 +38,11 @@ export const youtubeProvider: StatsProvider = async ({ externalId, account }) =>
     },
     ownershipVerified: owned,
     audienceShare: share,
+    meta: {
+      caption: `${item.snippet?.title ?? ""}\n${item.snippet?.description ?? ""}`.trim() || null,
+      author: item.snippet?.channelTitle ?? null,
+      thumbnailUrl: item.snippet?.thumbnails?.maxres?.url ?? item.snippet?.thumbnails?.high?.url ?? `https://i.ytimg.com/vi/${externalId}/hqdefault.jpg`,
+    },
   };
 };
 

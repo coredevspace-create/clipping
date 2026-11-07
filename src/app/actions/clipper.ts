@@ -7,6 +7,7 @@ import { addMember } from "@/lib/marketplace";
 import { OAUTH_PLATFORMS, PROVIDERS, type OAuthPlatform } from "@/lib/oauth/providers";
 import { parseClipUrl } from "@/lib/platforms";
 import { refreshClip } from "@/lib/tracking";
+import { containsCode, ensureVerifyCode, previewClip } from "@/lib/verify";
 import { done, fail, str } from "./util";
 
 export async function joinWorkspace(inviteCode: string) {
@@ -25,11 +26,6 @@ export async function submitClip(workspaceId: string, fd: FormData) {
   const parsed = parseClipUrl(str(fd, "url"));
   if (!parsed.ok) fail(back, parsed.error);
 
-  if (workspace.requireVerifiedAccounts && OAUTH_PLATFORMS.includes(parsed.platform as OAuthPlatform) && PROVIDERS[parsed.platform as OAuthPlatform].configured()) {
-    const linked = await db.connectedAccount.count({ where: { userId: user.id, platform: parsed.platform } });
-    if (!linked) fail(back, `Cette équipe exige un compte vérifié : connecte ton compte ${PROVIDERS[parsed.platform as OAuthPlatform].label} dans « Comptes connectés ».`);
-  }
-
   const momentId = str(fd, "momentId") || null;
   if (momentId) {
     const m = await db.moment.findFirst({ where: { id: momentId, source: { workspaceId } } });
@@ -41,15 +37,46 @@ export async function submitClip(workspaceId: string, fd: FormData) {
   });
   if (dup) fail(back, dup.membershipId === membership.id ? "Tu as déjà soumis ce clip." : "Ce clip a déjà été soumis par un autre clippeur.");
 
+  // ——— Preuve que la vidéo appartient au clippeur ———
+  // 1) compte connecté (vérifié ensuite par l'API de la plateforme) ou 2) code personnel dans la description.
+  const code = await ensureVerifyCode(user.id);
+  const oauthReady = OAUTH_PLATFORMS.includes(parsed.platform as OAuthPlatform) && PROVIDERS[parsed.platform as OAuthPlatform].configured();
+  const linked = oauthReady && (await db.connectedAccount.count({ where: { userId: user.id, platform: parsed.platform } })) > 0;
+  const preview = await previewClip(parsed.platform, parsed.externalId, parsed.url).catch(() => null);
+  const codeFound = containsCode(preview?.caption, code);
+
+  if (!linked && !codeFound) {
+    if (preview?.caption != null) {
+      // la description est lisible et le code n'y est pas : refus
+      fail(back, `Ajoute ton code #${code} dans la description de ta vidéo pour prouver qu'elle est à toi, puis renvoie le lien.`);
+    }
+    if (workspace.requireVerifiedAccounts) {
+      fail(back, oauthReady
+        ? `Cette équipe exige une preuve de propriété : connecte ton compte ${PROVIDERS[parsed.platform as OAuthPlatform].label} dans « Comptes connectés ».`
+        : "Cette équipe exige une preuve de propriété, impossible à vérifier pour cette plateforme pour l'instant.");
+    }
+  }
+
   const clip = await db.clip.create({
-    data: { workspaceId, membershipId: membership.id, momentId, url: parsed.url, platform: parsed.platform, externalId: parsed.externalId },
+    data: {
+      workspaceId,
+      membershipId: membership.id,
+      momentId,
+      url: parsed.url,
+      platform: parsed.platform,
+      externalId: parsed.externalId,
+      thumbnailUrl: preview?.thumbnailUrl ?? null,
+      caption: preview?.caption?.slice(0, 2000) ?? null,
+      authorHandle: preview?.author ?? null,
+      ...(codeFound ? { ownershipVerified: true, ownershipMethod: "CODE" } : {}),
+    },
   });
   try {
     await refreshClip(clip.id);
   } catch {
     // les stats seront récupérées au prochain passage du cron
   }
-  done(back, "Clip envoyé ! Ses vues sont suivies automatiquement.");
+  done(back, codeFound || linked ? "Clip envoyé et vérifié ✓ Ses vues sont suivies automatiquement." : "Clip envoyé ! Ses vues sont suivies automatiquement (propriété non vérifiable sur cette plateforme).");
 }
 
 export async function reserveMoment(workspaceId: string, momentId: string) {

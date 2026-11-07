@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { approveClip, manualStats, refreshOneClip, rejectClip, reopenClip } from "@/app/actions/creator";
+import { AreaChart } from "@/components/charts/area-chart";
+import { ClipEmbed } from "@/components/clip/embed";
 import { Flash, FraudBadge, StatusBadge } from "@/components/ui";
 import { requireOwner } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -43,20 +45,30 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-4">
+      <div className="grid gap-6 lg:grid-cols-[300px_1fr]">
+        <div className="space-y-3 lg:sticky lg:top-24 lg:self-start">
+          <ClipEmbed platform={clip.platform} externalId={clip.externalId} url={clip.url} thumbnailUrl={clip.thumbnailUrl} caption={clip.caption} />
+          {clip.authorHandle && <p className="text-center text-sm text-zinc-500">Publié par <strong className="text-ink">{clip.authorHandle}</strong></p>}
+        </div>
+        <div className="min-w-0 space-y-6">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Box label="Vues" value={num(clip.views)} />
         <Box label="Likes · Comm. · Partages" value={`${num(clip.likes)} · ${num(clip.comments)} · ${num(clip.shares)}`} />
         <Box label="Gain du clip" value={euros(clipEarnings(clip.views, workspace))} sub={`dont ${euros(clip.paidCents)} déjà versé`} />
         <Box label="Dernier relevé" value={dateTimeFr(clip.lastFetchedAt)} sub={clip.statsSource ? `Source : ${clip.statsSource}` : undefined} />
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="card lg:col-span-2">
+      <div className="grid gap-6 xl:grid-cols-3">
+        <div className="card xl:col-span-2">
           <div className="mb-3 flex items-center justify-between">
             <h3 className="font-display text-lg font-bold">Courbe des vues</h3>
             <form action={refreshOneClip.bind(null, id, clip.id)}><Submit className="btn-ghost">↻ Actualiser</Submit></form>
           </div>
-          <ViewsChart points={clip.snapshots.map((s) => ({ t: s.capturedAt.getTime(), v: s.views }))} />
+          {clip.snapshots.length < 2 ? (
+            <div className="grid h-48 place-items-center text-sm text-zinc-400">Pas encore assez de relevés pour tracer la courbe.</div>
+          ) : (
+            <AreaChart points={clip.snapshots.map((s) => ({ date: s.capturedAt.toISOString(), value: s.views }))} withTime />
+          )}
           <p className="mt-2 text-xs text-zinc-500">{clip.snapshots.length} relevé(s). Une courbe organique monte puis ralentit ; une marche d&apos;escalier brutale trahit souvent des bots.</p>
         </div>
 
@@ -79,9 +91,9 @@ export default async function Page({ params, searchParams }: { params: Promise<{
           <div className="mt-4 space-y-1 border-t border-ink/10 pt-3 text-sm">
             <div>
               Propriété :{" "}
-              {clip.ownershipVerified === true ? <strong className="text-brand-700">✓ vidéo sur le compte connecté du clippeur</strong>
+              {clip.ownershipVerified === true ? <strong className="text-brand-700">✓ {clip.ownershipMethod === "CODE" ? "code du clippeur trouvé dans la description" : "vidéo sur le compte connecté du clippeur"}</strong>
                 : clip.ownershipVerified === false ? <strong className="text-coral">✗ absente du compte connecté</strong>
-                : <span className="text-zinc-500">non vérifiée (compte non connecté)</span>}
+                : <span className="text-zinc-500">non vérifiée (ni code dans la description, ni compte connecté)</span>}
             </div>
             {clip.audienceShare != null && (
               <div>Audience francophone : <strong>{Math.round(clip.audienceShare * 100)} %</strong> des vues</div>
@@ -89,6 +101,9 @@ export default async function Page({ params, searchParams }: { params: Promise<{
           </div>
           {clip.approvedOverride && <p className="mt-3 text-xs text-zinc-500">Validé manuellement malgré les signaux.</p>}
           <p className="mt-3 text-xs text-zinc-500">Seuil de quarantaine : {workspace.fraudThreshold}/100 (modifiable dans les réglages).</p>
+        </div>
+      </div>
+
         </div>
       </div>
 
@@ -114,23 +129,5 @@ function Box({ label, value, sub }: { label: string; value: string; sub?: string
       <div className="mt-1 text-lg font-bold">{value}</div>
       {sub && <div className="text-xs text-zinc-500">{sub}</div>}
     </div>
-  );
-}
-
-function ViewsChart({ points }: { points: { t: number; v: number }[] }) {
-  if (points.length < 2) return <div className="grid h-48 place-items-center text-sm text-zinc-400">Pas encore assez de relevés pour tracer la courbe.</div>;
-  const W = 600, H = 200, P = 8;
-  const t0 = points[0].t, t1 = points[points.length - 1].t || t0 + 1;
-  const vMax = Math.max(...points.map((p) => p.v), 1);
-  const x = (t: number) => P + ((t - t0) / Math.max(t1 - t0, 1)) * (W - 2 * P);
-  const y = (v: number) => H - P - (v / vMax) * (H - 2 * P);
-  const d = points.map((p, i) => `${i ? "L" : "M"}${x(p.t).toFixed(1)},${y(p.v).toFixed(1)}`).join(" ");
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="h-48 w-full" role="img" aria-label="Évolution des vues">
-      <path d={`${d} L${x(t1)},${H - P} L${P},${H - P} Z`} fill="var(--color-brand-100)" />
-      <path d={d} fill="none" stroke="var(--color-brand-600)" strokeWidth={2} />
-      {points.map((p) => <circle key={p.t} cx={x(p.t)} cy={y(p.v)} r={2.5} fill="var(--color-brand-600)" />)}
-      <text x={W - P} y={14} textAnchor="end" fontSize={11} fill="#71717a">{num(vMax)} vues</text>
-    </svg>
   );
 }

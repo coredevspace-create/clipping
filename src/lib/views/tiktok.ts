@@ -1,6 +1,6 @@
 import type { StatsProvider } from "./types";
 
-type TikTokVideo = { id: string; create_time?: number; view_count?: number; like_count?: number; comment_count?: number; share_count?: number };
+type TikTokVideo = { id: string; title?: string; video_description?: string; cover_image_url?: string; create_time?: number; view_count?: number; like_count?: number; comment_count?: number; share_count?: number };
 
 /**
  * TikTok Display API : statistiques d'une vidéo du clippeur connecté.
@@ -9,7 +9,7 @@ type TikTokVideo = { id: string; create_time?: number; view_count?: number; like
 export const tiktokProvider: StatsProvider = async ({ externalId, account }) => {
   if (!account) return null;
   const r = await fetch(
-    "https://open.tiktokapis.com/v2/video/query/?fields=id,create_time,view_count,like_count,comment_count,share_count",
+    "https://open.tiktokapis.com/v2/video/query/?fields=id,title,video_description,cover_image_url,create_time,view_count,like_count,comment_count,share_count",
     {
       method: "POST",
       headers: { Authorization: `Bearer ${account.accessToken}`, "Content-Type": "application/json" },
@@ -32,5 +32,6 @@ export const tiktokProvider: StatsProvider = async ({ externalId, account }) => 
     },
     ownershipVerified: true,
     audienceShare: null,
+    meta: { caption: v.video_description ?? v.title ?? null, thumbnailUrl: v.cover_image_url ?? null },
   };
 };
