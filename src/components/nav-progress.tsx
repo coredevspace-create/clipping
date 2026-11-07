@@ -68,7 +68,7 @@ export function NavProgress() {
   if (progress === null) return null;
   return (
     <div className="pointer-events-none fixed inset-x-0 top-0 z-[100] h-[3px]" role="progressbar" aria-label="Chargement">
-      <div className="h-full bg-lime shadow-[0_0_12px_var(--color-lime)] transition-[width] duration-200 ease-out" style={{ width: `${progress}%` }} />
+      <div className="h-full bg-accent transition-[width] duration-200 ease-out" style={{ width: `${progress}%` }} />
     </div>
   );
 }

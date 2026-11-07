@@ -72,7 +72,8 @@ export async function submitClip(workspaceId: string, fd: FormData) {
     },
   });
   try {
-    await refreshClip(clip.id);
+    // l'aperçu vient d'être récupéré : on ne le redemande pas
+    await refreshClip(clip.id, new Date(), { skipPreview: true });
   } catch {
     // les stats seront récupérées au prochain passage du cron
   }

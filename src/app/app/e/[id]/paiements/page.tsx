@@ -53,7 +53,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
                   <tr key={d.membershipId}>
                     <td>{m?.user.name}</td>
                     <td className="text-right">{d.lines.length}</td>
-                    <td className="text-right font-mono">{num(d.views)}</td>
+                    <td className="text-right tabular-nums">{num(d.views)}</td>
                     <td className="text-right font-semibold">{euros(d.amountCents)}</td>
                     <td className="text-xs">{m?.payoutMethod ? `${m.payoutMethod} ✓` : <span className="text-amber-700">À demander</span>}</td>
                   </tr>

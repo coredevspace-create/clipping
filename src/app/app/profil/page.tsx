@@ -64,7 +64,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ e
 
 function Toggle({ name, value, label, checked }: { name: string; value: string; label: string; checked: boolean }) {
   return (
-    <label className="cursor-pointer select-none rounded-full border border-zinc-300 px-3 py-1 text-sm has-[:checked]:border-ink has-[:checked]:bg-ink has-[:checked]:text-lime">
+    <label className="cursor-pointer select-none rounded-full border border-zinc-300 px-3 py-1 text-sm has-[:checked]:border-accent has-[:checked]:bg-accent has-[:checked]:text-white">
       <input type="checkbox" name={name} value={value} defaultChecked={checked} className="sr-only" />
       {label}
     </label>

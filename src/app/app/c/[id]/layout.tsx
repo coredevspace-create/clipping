@@ -7,12 +7,12 @@ export default async function Layout({ children, params }: { children: React.Rea
   const base = `/app/c/${id}`;
   return (
     <div>
-      <div className="eyebrow text-zinc-500">Espace clippeur</div>
-      <h1 className="mb-6 mt-2 font-display text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">{workspace.name}</h1>
+      <div className="text-[13px] font-medium text-zinc-500">Espace clippeur</div>
+      <h1 className="mb-6 mt-1 text-[34px] font-bold leading-tight tracking-[-0.035em] sm:text-[40px]">{workspace.name}</h1>
       <NavTabs
         items={[
           { href: base, label: "Mes clips & gains", exact: true },
-          { href: `${base}/discussion`, label: "💬 Discussion" },
+          { href: `${base}/discussion`, label: "Discussion" },
         ]}
       />
       {children}

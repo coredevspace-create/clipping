@@ -5,7 +5,7 @@ export function Chips({ items, tone = "zinc" }: { items: string[]; tone?: "zinc"
   return (
     <div className="flex flex-wrap gap-1">
       {items.map((i) => (
-        <span key={i} className={`rounded-full px-2 py-0.5 text-xs font-medium ${tone === "brand" ? "bg-brand-100 text-brand-700" : "bg-zinc-100 text-zinc-700"}`}>
+        <span key={i} className={`rounded-full px-2 py-0.5 text-xs font-medium ${tone === "brand" ? "bg-brand-100 text-brand-700" : "bg-zinc-100 text-zinc-600"}`}>
           {i}
         </span>
       ))}
@@ -19,7 +19,7 @@ export function ReputationLine({ r }: { r: Reputation }) {
   if (r.validatedClips === 0) return <p className="text-xs text-zinc-500">Nouveau sur la plateforme : pas encore de clips vérifiés.</p>;
   return (
     <p className="text-xs text-zinc-600">
-      <span className="font-semibold text-brand-700">✓ Vérifié</span> · {num(r.validatedClips)} clip(s) validé(s) · {compact(r.verifiedViews)} vues vérifiées
+      <span className="font-semibold text-ok">✓ Vérifié</span> · {num(r.validatedClips)} clip(s) validé(s) · {compact(r.verifiedViews)} vues vérifiées
       {r.refusedRate !== null && ` · ${Math.round(r.refusedRate * 100)} % de refus`} · {r.teams} équipe(s)
     </p>
   );
@@ -55,7 +55,7 @@ export function FilterBar({ action, q, value, options, name, platform }: { actio
 export function Avatar({ name, size = 40 }: { name: string; size?: number }) {
   const initials = (name.match(/\p{L}+/gu) ?? ["?"]).map((w) => w[0]).join("").slice(0, 2).toUpperCase();
   return (
-    <span className="grid shrink-0 place-items-center rounded-full bg-ink font-display font-bold text-lime" style={{ width: size, height: size, fontSize: size / 2.6 }}>
+    <span className="grid shrink-0 place-items-center rounded-full bg-gradient-to-b from-[#a1a1a6] to-[#8e8e93] font-semibold text-white" style={{ width: size, height: size, fontSize: size / 2.6 }}>
       {initials}
     </span>
   );

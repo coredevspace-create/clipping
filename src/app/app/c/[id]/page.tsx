@@ -88,7 +88,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
           </div>
           <div className="card">
             <h2 className="mb-4 font-display text-lg font-bold">
-              Classement de l&apos;équipe {myRank >= 0 && <span className="font-mono text-sm font-normal text-zinc-500">· tu es {myRank + 1}<sup>e</sup></span>}
+              Classement de l&apos;équipe {myRank >= 0 && <span className="text-sm font-normal text-zinc-500">· tu es {myRank + 1}<sup>e</sup></span>}
             </h2>
             <Leaderboard rows={top} highlight={user.id} />
           </div>
@@ -119,8 +119,8 @@ export default async function Page({ params, searchParams }: { params: Promise<{
             <input readOnly value={trackedLink} className="input font-mono" />
           </div>
           <div className="flex gap-3 md:flex-col">
-            <div className="rounded-xl bg-paper px-4 py-2"><div className="font-display text-2xl font-extrabold">{clickCount}</div><div className="text-xs text-zinc-500">clics (30 j)</div></div>
-            <div className="rounded-xl bg-lime/40 px-4 py-2"><div className="font-display text-2xl font-extrabold">{(convAgg._sum.quantity ?? 0).toLocaleString("fr-FR")}</div><div className="text-xs text-zinc-600">{product.conversions}</div></div>
+            <div className="rounded-xl bg-paper px-4 py-2"><div className="font-display text-2xl font-bold">{clickCount}</div><div className="text-xs text-zinc-500">clics (30 j)</div></div>
+            <div className="rounded-xl bg-[#e3f5e8] px-4 py-2"><div className="font-display text-2xl font-bold">{(convAgg._sum.quantity ?? 0).toLocaleString("fr-FR")}</div><div className="text-xs text-zinc-600">{product.conversions}</div></div>
           </div>
         </div>
       )}
@@ -155,7 +155,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         {clips.length === 0 ? (
           <Empty>Tu n&apos;as encore envoyé aucun clip. N&apos;oublie pas ton code <strong>#{code}</strong> dans la description.</Empty>
         ) : (
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
             {clips.map((c) => (
               <ClipCard
                 key={c.id}

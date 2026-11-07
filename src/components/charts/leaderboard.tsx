@@ -8,16 +8,16 @@ export function Leaderboard({ rows, highlight }: { rows: { id: string; name: str
   return (
     <ol className="space-y-3">
       {rows.map((r, i) => (
-        <li key={r.id} className={`flex items-center gap-3 rounded-xl px-2 py-1.5 ${r.id === highlight ? "bg-lime/30" : ""}`} title={`${r.name} : ${r.views.toLocaleString("fr-FR")} vues, ${r.clips} clip(s)`}>
-          <span className="w-5 text-center font-mono text-xs text-zinc-500">{i + 1}</span>
+        <li key={r.id} className={`flex items-center gap-3 rounded-xl px-2 py-1.5 ${r.id === highlight ? "bg-brand-50" : ""}`} title={`${r.name} : ${r.views.toLocaleString("fr-FR")} vues, ${r.clips} clip(s)`}>
+          <span className="w-5 text-center text-xs tabular-nums text-zinc-500">{i + 1}</span>
           <Avatar name={r.name} size={30} />
           <div className="min-w-0 flex-1">
             <div className="flex items-baseline justify-between gap-2 text-sm">
               <span className="truncate font-medium">{r.name}{r.id === highlight && " (toi)"}</span>
-              <span className="font-mono text-xs text-ink">{compact(r.views)}</span>
+              <span className="text-xs font-medium tabular-nums text-zinc-600">{compact(r.views)}</span>
             </div>
             <div className="mt-1 h-1.5 rounded-full bg-ink/[0.06]">
-              <div className="h-full rounded-full bg-[#5a7a00]" style={{ width: `${Math.max(2, (r.views / max) * 100)}%` }} />
+              <div className="h-full rounded-full bg-accent" style={{ width: `${Math.max(2, (r.views / max) * 100)}%` }} />
             </div>
           </div>
         </li>

@@ -36,8 +36,8 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ e
               <div className="font-display text-lg font-bold">{w.name}</div>
               <div className="mt-1 text-sm text-zinc-500">{w._count.memberships} clippeur(s) · {euros(w.cpmCents)} / 1 000 vues</div>
               <div className="mt-3 flex flex-wrap gap-2 text-xs">
-                {w._count.clips > 0 && <span className="rounded-full bg-coral/15 px-2 py-0.5 font-semibold text-coral">{w._count.clips} suspect(s)</span>}
-                {(w.offer?._count.applications ?? 0) > 0 && <span className="rounded-full bg-lime px-2 py-0.5 font-semibold text-ink">{w.offer!._count.applications} candidature(s)</span>}
+                {w._count.clips > 0 && <span className="rounded-full bg-[#fff1f0] px-2 py-0.5 font-semibold text-coral">{w._count.clips} suspect(s)</span>}
+                {(w.offer?._count.applications ?? 0) > 0 && <span className="rounded-full bg-brand-100 px-2 py-0.5 font-semibold text-brand-700">{w.offer!._count.applications} candidature(s)</span>}
                 {!w.offer && <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-zinc-600">Pas d&apos;annonce publiée</span>}
               </div>
             </Link>
@@ -104,7 +104,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ e
               <div key={a.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm">
                 <Link href={`/offres/${a.offerId}`} className="font-medium hover:underline">{a.offer.workspace.name} — {a.offer.title}</Link>
                 <div className="flex items-center gap-3">
-                  <span className={a.status === "ACCEPTED" ? "text-brand-700" : "text-zinc-500"}>{{ PENDING: "En attente", ACCEPTED: "✓ Acceptée", REJECTED: "Non retenue" }[a.status]}</span>
+                  <span className={a.status === "ACCEPTED" ? "text-ok" : "text-zinc-500"}>{{ PENDING: "En attente", ACCEPTED: "✓ Acceptée", REJECTED: "Non retenue" }[a.status]}</span>
                   {a.status === "PENDING" && <form action={withdrawApplication.bind(null, a.id)}><Submit className="text-xs text-zinc-500 underline">Retirer</Submit></form>}
                 </div>
               </div>

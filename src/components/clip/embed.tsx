@@ -9,7 +9,7 @@ export function ClipEmbed({ platform, externalId, url, thumbnailUrl, caption }: 
     : platform === "INSTAGRAM" ? `https://www.instagram.com/reel/${encodeURIComponent(externalId)}/embed/`
     : null;
   return (
-    <div className="overflow-hidden rounded-2xl border border-ink/10 bg-ink">
+    <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-ink">
       <div className="relative aspect-[9/16] w-full">
         {src ? (
           <iframe

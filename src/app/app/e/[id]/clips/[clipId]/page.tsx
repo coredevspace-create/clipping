@@ -29,7 +29,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <Link href={`/app/e/${id}`} className="text-sm text-zinc-500 hover:underline">← Tous les clips</Link>
-          <h2 className="mt-1 font-display text-2xl font-extrabold tracking-tight">{PLATFORM_LABELS[clip.platform as Platform]} · {clip.membership.user.name}</h2>
+          <h2 className="mt-1 font-display text-2xl font-bold tracking-tight">{PLATFORM_LABELS[clip.platform as Platform]} · {clip.membership.user.name}</h2>
           <a href={clip.url} target="_blank" rel="noreferrer" className="break-all text-sm text-brand-700 hover:underline">{clip.url}</a>
           {clip.moment && (
             <p className="mt-1 text-sm text-zinc-500">
@@ -78,12 +78,12 @@ export default async function Page({ params, searchParams }: { params: Promise<{
             <FraudBadge score={clip.fraudScore} threshold={workspace.fraudThreshold} />
           </div>
           {reasons.length === 0 ? (
-            <p className="text-sm text-brand-700">Aucun signal suspect détecté.</p>
+            <p className="text-sm text-ok">Aucun signal suspect détecté.</p>
           ) : (
             <ul className="space-y-2 text-sm">
               {reasons.map((r) => (
                 <li key={r.code} className="rounded-lg bg-coral/10 p-2 text-ink">
-                  <span className="font-mono text-xs font-semibold">+{r.points}</span> {r.label}
+                  <span className="text-xs font-semibold tabular-nums">+{r.points}</span> {r.label}
                 </li>
               ))}
             </ul>
@@ -91,7 +91,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
           <div className="mt-4 space-y-1 border-t border-ink/10 pt-3 text-sm">
             <div>
               Propriété :{" "}
-              {clip.ownershipVerified === true ? <strong className="text-brand-700">✓ {clip.ownershipMethod === "CODE" ? "code du clippeur trouvé dans la description" : "vidéo sur le compte connecté du clippeur"}</strong>
+              {clip.ownershipVerified === true ? <strong className="text-ok">✓ {clip.ownershipMethod === "CODE" ? "code du clippeur trouvé dans la description" : "vidéo sur le compte connecté du clippeur"}</strong>
                 : clip.ownershipVerified === false ? <strong className="text-coral">✗ absente du compte connecté</strong>
                 : <span className="text-zinc-500">non vérifiée (ni code dans la description, ni compte connecté)</span>}
             </div>

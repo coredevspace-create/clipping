@@ -83,7 +83,7 @@ function ConversionSetup({ id, conversionKey, kind }: { id: string; conversionKe
           Le visiteur arrive sur ton site avec <code>utm_content=CODE_DU_CLIPPEUR</code>. Garde ce code (cookie ou base de données) et, quand il s&apos;inscrit ou achète,
           appelle cette URL depuis ton serveur :
         </p>
-        <pre className="overflow-x-auto rounded-xl bg-ink p-3 font-mono text-xs text-lime">{`${endpoint}&ref=CODE_DU_CLIPPEUR&type=signup&id=ID_UTILISATEUR`}</pre>
+        <pre className="overflow-x-auto rounded-xl bg-paper p-3 font-mono text-xs text-ink">{`${endpoint}&ref=CODE_DU_CLIPPEUR&type=signup&id=ID_UTILISATEUR`}</pre>
         <p className="text-xs text-zinc-500"><code>type</code> : signup, purchase ou install. <code>id</code> évite de compter deux fois le même utilisateur. Garde la clé secrète.</p>
       </div>
       <div className="space-y-1 text-sm">

@@ -29,7 +29,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         <div className="flex items-center gap-4">
           <Avatar name={profile.user.name} size={56} />
           <div>
-            <h1 className="font-display text-3xl font-extrabold tracking-[-0.03em]">{profile.user.name}</h1>
+            <h1 className="font-display text-3xl font-bold tracking-[-0.03em]">{profile.user.name}</h1>
             <p className="text-zinc-600">{profile.headline}</p>
           </div>
         </div>

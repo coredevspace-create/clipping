@@ -9,7 +9,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ c
   return (
     <LegalPage title="Suppression de tes données">
       {code && (
-        <p className="rounded-2xl bg-lime/40 p-4 font-medium text-ink">
+        <p className="rounded-2xl bg-[#e3f5e8] p-4 font-medium text-ink">
           Ta demande a bien été traitée : les données issues d&apos;Instagram ont été supprimées. Code de confirmation : <code>{code}</code>
         </p>
       )}

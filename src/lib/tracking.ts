@@ -17,11 +17,11 @@ async function linkedAccount(userId: string, platform: string): Promise<LinkedAc
 }
 
 /** Récupère les stats d'un clip via l'API, enregistre un relevé et relance l'analyse anti-fraude. */
-export async function refreshClip(clipId: string, now = new Date()) {
+export async function refreshClip(clipId: string, now = new Date(), opts: { skipPreview?: boolean } = {}) {
   const clip = await db.clip.findUniqueOrThrow({ where: { id: clipId }, include: { membership: { select: { userId: true } } } });
   if (clip.status === "REJECTED") return { skipped: true as const };
   // aperçu public (miniatures TikTok signées : elles expirent, on les rafraîchit)
-  const preview = clip.platform === "TIKTOK" || clip.platform === "X" || !clip.thumbnailUrl
+  const preview = !opts.skipPreview && (clip.platform === "TIKTOK" || clip.platform === "X" || !clip.thumbnailUrl)
     ? await previewClip(clip.platform as Platform, clip.externalId, clip.url).catch(() => null)
     : null;
   if (preview) await applyPreview(clipId, preview);

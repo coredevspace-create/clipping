@@ -1,40 +1,46 @@
 @import "tailwindcss";
 
-/* ——— Identité : table de montage. Encre, papier, signal citron, corail pour la fraude. ——— */
+/* ——— Identité : sobriété façon Apple. Blanc, gris clair, quasi-noir, une seule couleur d'action (bleu). ——— */
 @theme inline {
-  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-instrument), ui-serif, Georgia, serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --font-display: var(--font-inter), -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  --font-serif: var(--font-inter), -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 
 @theme {
-  --color-ink: #0d0d0f;
-  --color-ink-2: #18181c;
-  --color-paper: #f4f1ea;
-  --color-paper-2: #ebe6da;
-  --color-lime: #d2ff3c;
-  --color-lime-2: #b8e81a;
-  --color-coral: #ff5a36;
+  --color-ink: #1d1d1f;
+  --color-ink-2: #2c2c2e;
+  --color-paper: #f5f5f7;
+  --color-paper-2: #e8e8ed;
+  /* couleur d'action */
+  --color-accent: #0071e3;
+  --color-accent-2: #0077ed;
+  /* « positif » (validé, vérifié, gains) */
+  --color-lime: #34c759;
+  --color-lime-2: #30b350;
+  --color-ok: #248a3d;
+  /* « alerte » (suspect, refus) */
+  --color-coral: #d70015;
 
-  /* anciens jetons « brand » réalignés sur l'identité */
-  --color-brand-50: #f6ffd6;
-  --color-brand-100: #ecffb0;
-  --color-brand-500: #0d0d0f;
-  --color-brand-600: #0d0d0f;
-  --color-brand-700: #3f5a00;
+  /* anciens jetons « brand » : liens en bleu */
+  --color-brand-50: #f0f6ff;
+  --color-brand-100: #e1eefe;
+  --color-brand-500: #0071e3;
+  --color-brand-600: #0071e3;
+  --color-brand-700: #0066cc;
 
-  /* gris chauds (papier) au lieu des gris froids */
-  --color-zinc-50: #faf8f3;
-  --color-zinc-100: #f1ede4;
-  --color-zinc-200: #e3ddd0;
-  --color-zinc-300: #cfc7b7;
-  --color-zinc-400: #a59d8d;
-  --color-zinc-500: #7a7366;
-  --color-zinc-600: #5c564b;
-  --color-zinc-700: #423d35;
-  --color-zinc-800: #2a2722;
-  --color-zinc-900: #171512;
+  /* gris Apple */
+  --color-zinc-50: #fbfbfd;
+  --color-zinc-100: #f5f5f7;
+  --color-zinc-200: #e8e8ed;
+  --color-zinc-300: #d2d2d7;
+  --color-zinc-400: #aeaeb2;
+  --color-zinc-500: #6e6e73;
+  --color-zinc-600: #515154;
+  --color-zinc-700: #424245;
+  --color-zinc-800: #2c2c2e;
+  --color-zinc-900: #1d1d1f;
 
   --animate-marquee: marquee 40s linear infinite;
   --animate-feed: feed 9s ease-in-out infinite;
@@ -58,37 +64,37 @@
 html { scroll-behavior: smooth; }
 body {
   @apply bg-paper font-sans text-ink antialiased;
-  font-feature-settings: "ss01";
+  letter-spacing: -0.011em;
 }
-::selection { background: var(--color-lime); color: var(--color-ink); }
+::selection { background: #b3d7ff; color: var(--color-ink); }
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-paper transition hover:-translate-y-px hover:shadow-[0_6px_0_-2px_var(--color-lime)] disabled:pointer-events-none disabled:opacity-40;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-accent px-5 py-2.5 text-[15px] font-medium text-white transition hover:bg-accent-2 disabled:pointer-events-none disabled:opacity-40;
   }
   .btn-lime {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-lime px-6 py-3 font-semibold text-ink transition hover:-translate-y-0.5 hover:bg-lime-2;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-accent px-6 py-3 text-[17px] font-medium text-white transition hover:bg-accent-2;
   }
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-ink/15 bg-white/70 px-4 py-2 text-sm font-medium text-ink transition hover:border-ink;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-ink transition hover:bg-zinc-50;
   }
   .btn-danger {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-coral/40 bg-white/70 px-4 py-2 text-sm font-medium text-coral transition hover:bg-coral hover:text-white;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-[#fff1f0] px-4 py-2 text-sm font-medium text-coral transition hover:bg-[#ffe1de];
   }
   .input {
-    @apply w-full rounded-xl border border-ink/15 bg-white px-3.5 py-2.5 text-sm outline-none transition placeholder:text-zinc-400 focus:border-ink focus:shadow-[0_0_0_3px_var(--color-lime)];
+    @apply w-full rounded-xl border border-zinc-300 bg-white px-3.5 py-2.5 text-[15px] outline-none transition placeholder:text-zinc-400 focus:border-accent focus:shadow-[0_0_0_4px_rgba(0,113,227,0.15)];
   }
   .label {
-    @apply mb-1.5 block font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-zinc-600;
+    @apply mb-1.5 block text-[13px] font-medium text-zinc-500;
   }
   .card {
-    @apply rounded-2xl border border-ink/10 bg-white p-5 shadow-[0_1px_0_rgba(13,13,15,0.04)];
+    @apply rounded-[20px] bg-white p-5;
   }
   .table { @apply w-full text-left text-sm; }
-  .table th { @apply border-b border-ink/10 px-3 py-2.5 font-mono text-[11px] font-medium uppercase tracking-[0.1em] text-zinc-500; }
-  .table td { @apply border-b border-ink/5 px-3 py-3 align-middle; }
-  .eyebrow { @apply font-mono text-[11px] font-medium uppercase tracking-[0.18em]; }
-  .serif { @apply font-serif font-normal italic tracking-normal; }
+  .table th { @apply border-b border-zinc-200 px-3 py-2.5 text-xs font-medium text-zinc-500; }
+  .table td { @apply border-b border-zinc-100 px-3 py-3 align-middle; }
+  .eyebrow { @apply text-[13px] font-semibold; }
+  .serif { @apply text-zinc-400; }
   .reveal { animation: rise 0.7s cubic-bezier(.2,.7,.2,1) both; }
 }
 
@@ -105,16 +111,16 @@ body { overflow-x: clip; }
 }
 .draw { stroke-dasharray: 900; stroke-dashoffset: 900; animation: draw 2.4s .4s cubic-bezier(.6,0,.2,1) forwards; }
 input[type="range"].range { appearance: none; height: 6px; border-radius: 999px; background: rgba(13,13,15,.12); }
-input[type="range"].range::-webkit-slider-thumb { appearance: none; width: 22px; height: 22px; border-radius: 999px; background: var(--color-ink); border: 4px solid var(--color-lime); cursor: grab; }
-input[type="range"].range::-moz-range-thumb { width: 16px; height: 16px; border-radius: 999px; background: var(--color-ink); border: 4px solid var(--color-lime); cursor: grab; }
+input[type="range"].range::-webkit-slider-thumb { appearance: none; width: 22px; height: 22px; border-radius: 999px; background: var(--color-accent); border: 4px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.3); cursor: grab; }
+input[type="range"].range::-moz-range-thumb { width: 16px; height: 16px; border-radius: 999px; background: var(--color-ink); border: 4px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.3); cursor: grab; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .draw { stroke-dashoffset: 0; }
 }
 
-.legal h2 { @apply mt-10 font-display text-2xl font-bold text-ink; }
+.legal h2 { @apply mt-10 text-2xl font-semibold tracking-tight text-ink; }
 .legal h3 { @apply mt-6 font-semibold text-ink; }
 .legal ul { @apply list-disc space-y-1 pl-6; }
-.legal a { @apply font-medium text-ink underline decoration-lime decoration-2 underline-offset-2; }
+.legal a { @apply font-medium text-brand-700 hover:underline; }
 .legal table { @apply w-full text-left text-sm; }
 .legal td, .legal th { @apply border-b border-ink/10 py-2 pr-4 align-top; }

@@ -47,7 +47,7 @@ export function BriefTemplates() {
     <div className="flex flex-wrap gap-1.5">
       <span className="text-xs text-zinc-500">Modèles :</span>
       {TEMPLATES.map((t) => (
-        <button key={t.name} type="button" onClick={() => fill(t.text)} className="rounded-full border border-ink/15 bg-white px-2.5 py-0.5 text-xs font-medium hover:border-ink hover:bg-lime">
+        <button key={t.name} type="button" onClick={() => fill(t.text)} className="rounded-full border border-ink/15 bg-white px-2.5 py-0.5 text-xs font-medium hover:border-accent hover:bg-brand-50">
           {t.name}
         </button>
       ))}

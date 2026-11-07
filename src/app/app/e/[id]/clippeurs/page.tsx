@@ -66,8 +66,8 @@ export default async function Page({ params, searchParams }: { params: Promise<{
           </div>
         </div>
         <div className="card bg-ink text-paper">
-          <div className="eyebrow text-lime">Coût par {product.conversion}</div>
-          <div className="mt-2 font-display text-4xl font-extrabold">{costPer(totalEarned, totalConv) !== null ? euros(costPer(totalEarned, totalConv)!) : "—"}</div>
+          <div className="text-[13px] font-medium text-zinc-400">Coût par {product.conversion}</div>
+          <div className="mt-2 font-display text-4xl font-bold">{costPer(totalEarned, totalConv) !== null ? euros(costPer(totalEarned, totalConv)!) : "—"}</div>
           <p className="mt-1 text-sm text-paper/70">
             {totalConv > 0 ? `${totalConv.toLocaleString("fr-FR")} ${product.conversions} attribués aux clippeurs.` : `Ajoute tes ${product.conversions} par clippeur pour voir qui est rentable.`}
             {best && ` Meilleur : ${best.m.user.name} (${euros(best.cpa!)}).`}
@@ -107,8 +107,8 @@ export default async function Page({ params, searchParams }: { params: Promise<{
                       </div>
                     </div>
                   </td>
-                  <td className="text-right font-mono">{compact(r.views)}</td>
-                  <td className="text-right font-mono text-xs" title={`iPhone ${r.clicks.IOS} · Android ${r.clicks.ANDROID} · Ordinateur ${r.clicks.DESKTOP}`}>
+                  <td className="text-right tabular-nums">{compact(r.views)}</td>
+                  <td className="text-right text-xs tabular-nums" title={`iPhone ${r.clicks.IOS} · Android ${r.clicks.ANDROID} · Ordinateur ${r.clicks.DESKTOP}`}>
                     {hasLinks ? (
                       <>
                         <div className="text-sm text-ink">{r.clicks.IOS + r.clicks.ANDROID + r.clicks.DESKTOP}</div>

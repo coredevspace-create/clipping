@@ -36,7 +36,7 @@ const stripHtml = (html: string) =>
 
 async function getJson<T>(url: string): Promise<T | null> {
   try {
-    const r = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(6000) });
+    const r = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(4000) });
     return r.ok ? ((await r.json()) as T) : null;
   } catch {
     return null;

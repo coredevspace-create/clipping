@@ -8,10 +8,10 @@ export function Thumb({ src, platform, alt }: { src?: string | null; platform: s
   const [broken, setBroken] = useState(false);
   if (!src || broken) {
     return (
-      <div className="grid h-full w-full place-items-center bg-[radial-gradient(circle_at_30%_20%,#2a2a30,#0d0d0f_70%)]">
+      <div className="grid h-full w-full place-items-center bg-gradient-to-b from-[#e8e8ed] to-[#d2d2d7]">
         <div className="flex flex-col items-center gap-2 opacity-80">
           <PlatformIcon platform={platform} size={36} />
-          <span className="font-mono text-[10px] uppercase tracking-widest text-paper/50">aperçu indisponible</span>
+          <span className="text-[11px] font-medium text-zinc-500">Aperçu indisponible</span>
         </div>
       </div>
     );

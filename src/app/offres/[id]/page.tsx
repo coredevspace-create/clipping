@@ -38,7 +38,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
       <div className="card space-y-4">
         <div>
           <div className="text-sm text-zinc-500">{ws.name} · publié par {ws.owner.name} · mis à jour le {dateFr(offer.updatedAt)}</div>
-          <h1 className="mt-1 font-display text-3xl font-extrabold tracking-[-0.03em]">{offer.title}</h1>
+          <h1 className="mt-1 font-display text-3xl font-bold tracking-[-0.03em]">{offer.title}</h1>
           {offer.status !== "OPEN" && <p className="mt-1 text-sm font-medium text-amber-700">Cette annonce est fermée aux candidatures.</p>}
         </div>
         <div className="flex flex-wrap gap-2"><Chips items={[offer.niche]} tone="brand" /><Chips items={platformChips(offer.platforms)} /></div>
@@ -51,7 +51,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
           </div>
         )}
         <div className="flex flex-wrap items-center gap-2 text-sm">
-          <span className="rounded-full bg-ink px-3 py-1 font-semibold text-lime">{productOf(ws.productType).label}</span>
+          <span className="rounded-full bg-paper px-3 py-1 font-semibold text-ink">{productOf(ws.productType).label}</span>
           {ws.appStoreUrl && <a href={ws.appStoreUrl} target="_blank" rel="noreferrer" className="btn-ghost py-1"> App Store ↗</a>}
           {ws.playStoreUrl && <a href={ws.playStoreUrl} target="_blank" rel="noreferrer" className="btn-ghost py-1">▶ Play Store ↗</a>}
           {ws.productUrl && <a href={ws.productUrl} target="_blank" rel="noreferrer" className="btn-ghost py-1">Site ↗</a>}

@@ -7,7 +7,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ n
   const sp = await searchParams;
   return (
     <div className="mx-auto max-w-sm">
-      <h1 className="mb-6 font-display text-4xl font-extrabold tracking-[-0.03em]">Connexion</h1>
+      <h1 className="mb-6 font-display text-4xl font-bold tracking-[-0.03em]">Connexion</h1>
       <Flash sp={sp} />
       <form action={login} className="card space-y-4">
         <input type="hidden" name="next" value={sp.next ?? "/app"} />

@@ -39,7 +39,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ e
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <span className="font-display text-xl font-bold">{provider.label}</span>
-                  {acc && <span className="rounded-full bg-lime px-2 py-0.5 font-mono text-[11px] font-semibold">✓ CONNECTÉ</span>}
+                  {acc && <span className="rounded-full bg-[#e3f5e8] px-2 py-0.5 text-[11px] font-semibold text-ok">✓ CONNECTÉ</span>}
                 </div>
                 {acc ? (
                   <p className="mt-1 text-sm text-zinc-600">

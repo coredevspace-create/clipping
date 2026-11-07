@@ -9,7 +9,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ n
   const clipperByDefault = sp.role === "clippeur" || next.startsWith("/rejoindre") || next.startsWith("/offres");
   return (
     <div className="mx-auto max-w-md">
-      <h1 className="mb-6 font-display text-4xl font-extrabold tracking-[-0.03em]">Créer un compte</h1>
+      <h1 className="mb-6 font-display text-4xl font-bold tracking-[-0.03em]">Créer un compte</h1>
       <Flash sp={sp} />
       <form action={signup} className="card space-y-4">
         <input type="hidden" name="next" value={next} />

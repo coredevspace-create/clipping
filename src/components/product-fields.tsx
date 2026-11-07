@@ -10,7 +10,7 @@ export function ProductFields({ w = {} }: { w?: W }) {
         <legend className="label">Type de produit</legend>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {Object.entries(PRODUCT_TYPES).map(([k, t]) => (
-            <label key={k} className="cursor-pointer rounded-xl border border-ink/15 px-3 py-2.5 text-sm has-[:checked]:border-ink has-[:checked]:bg-ink has-[:checked]:text-paper">
+            <label key={k} className="cursor-pointer rounded-xl border border-ink/15 px-3 py-2.5 text-sm has-[:checked]:border-accent has-[:checked]:bg-accent has-[:checked]:text-white">
               <input type="radio" name="productType" value={k} defaultChecked={(w.productType ?? "APP") === k} className="sr-only" />
               <span className="font-semibold">{t.label}</span>
               <span className="block text-xs opacity-60">suivi des {t.conversions}</span>

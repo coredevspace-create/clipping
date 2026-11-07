@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { euros, num } from "@/lib/format";
 import { NICHES } from "@/lib/marketplace";
 import { productOf } from "@/lib/product";
+import { IMAGES } from "@/lib/images";
 
 export const metadata = { title: "Missions de clipping" };
 
@@ -25,6 +26,10 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ q
 
   return (
     <div>
+      {IMAGES.missions && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={IMAGES.missions} alt="Des apps qui cherchent des clippeurs" className="mb-8 h-56 w-full rounded-[28px] object-cover sm:h-72" />
+      )}
       <PageTitle title="Missions de clipping" subtitle="Des apps et logiciels grand public cherchent des clippeurs. Postule, clippe, sois payé à la vue." />
       <FilterBar action="/offres" q={sp.q} name="niche" value={sp.niche} options={NICHES} platform={sp.plateforme} />
       {offers.length === 0 ? (

@@ -46,12 +46,12 @@ export function ClipCard({
       <Link href={href} className="relative block aspect-[9/14] overflow-hidden bg-ink" target={href.startsWith("http") ? "_blank" : undefined}>
         <Thumb src={clip.thumbnailUrl} platform={clip.platform} alt={`Clip ${platformLabel(clip.platform)}`} />
         <div className="absolute inset-x-0 top-0 flex items-start justify-between p-2.5">
-          <span className="rounded-lg bg-black/40 p-1 backdrop-blur"><PlatformIcon platform={clip.platform} size={20} /></span>
+          <span className="rounded-lg bg-white/80 p-1 backdrop-blur"><PlatformIcon platform={clip.platform} size={20} /></span>
           <StatusBadge status={clip.status} />
         </div>
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-3 pt-10 text-paper">
-          <div className="font-display text-3xl font-extrabold leading-none tracking-tight">{compact(clip.views)}</div>
-          <div className="mt-1 flex items-center gap-2 font-mono text-[11px] text-paper/75">
+          <div className="text-[28px] font-bold leading-none tracking-[-0.03em]">{compact(clip.views)}</div>
+          <div className="mt-1 flex items-center gap-2 text-[12px] font-medium text-white/80">
             <span>vues</span>·<span>{clip.views ? `${eng.toLocaleString("fr-FR", { maximumFractionDigits: 1 })} % engag.` : "—"}</span>
           </div>
         </div>
@@ -59,15 +59,15 @@ export function ClipCard({
       <div className="flex flex-1 flex-col gap-2 p-3">
         <div className="flex items-center justify-between gap-2 text-sm">
           <span className="truncate font-semibold">{who ?? clip.authorHandle ?? platformLabel(clip.platform)}</span>
-          <span className="shrink-0 font-mono text-[11px] text-zinc-500">{dateFr(clip.createdAt)}</span>
+          <span className="shrink-0 text-[12px] text-zinc-500">{dateFr(clip.createdAt)}</span>
         </div>
-        <div className="flex items-center justify-between gap-2 text-xs">
+        <div className="flex items-center justify-between gap-2 whitespace-nowrap text-xs">
           {clip.ownershipVerified === true ? (
-            <span className="font-semibold text-brand-700">✓ vérifié</span>
+            <span className="font-semibold text-ok">✓ vérifié</span>
           ) : clip.ownershipVerified === false ? (
-            <span className="font-semibold text-coral">✗ pas son compte</span>
+            <span className="font-semibold text-coral">Pas son compte</span>
           ) : (
-            <span className="text-zinc-400">non vérifié</span>
+            <span className="text-zinc-400">Non vérifié</span>
           )}
           <FraudMeter score={clip.fraudScore} threshold={threshold} />
         </div>
@@ -75,7 +75,7 @@ export function ClipCard({
           <div>
             <div className="flex justify-between text-xs"><span className="font-semibold">{euros(earnings)}</span><span className="text-zinc-500">max {euros(cap)}</span></div>
             <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-ink/10">
-              <div className="h-full rounded-full bg-[#5a7a00]" style={{ width: `${Math.min(100, cap ? (earnings / cap) * 100 : 0)}%` }} />
+              <div className="h-full rounded-full bg-lime" style={{ width: `${Math.min(100, cap ? (earnings / cap) * 100 : 0)}%` }} />
             </div>
           </div>
         )}
@@ -86,9 +86,9 @@ export function ClipCard({
 }
 
 function FraudMeter({ score, threshold }: { score: number; threshold: number }) {
-  const tone = score >= threshold ? "bg-coral" : score >= threshold / 2 ? "bg-amber-400" : "bg-[#5a7a00]";
+  const tone = score >= threshold ? "bg-coral" : score >= threshold / 2 ? "bg-[#ff9f0a]" : "bg-lime";
   return (
-    <span className="flex items-center gap-1.5 font-mono text-[11px] text-zinc-500" title={`Score anti-fraude : ${score}/100`}>
+    <span className="flex items-center gap-1.5 text-[11px] text-zinc-500" title={`Score anti-fraude : ${score}/100`}>
       fraude
       <span className="relative h-1.5 w-10 overflow-hidden rounded-full bg-ink/10"><span className={`absolute inset-y-0 left-0 ${tone}`} style={{ width: `${Math.max(score, 4)}%` }} /></span>
       <span className="text-ink">{score}</span>

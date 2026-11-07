@@ -2,8 +2,8 @@
 
 import { useRef, useState } from "react";
 
-const LINE = "#5a7a00"; // validé : contraste ≥ 3:1 sur fond blanc
-const FILL = "#d2ff3c";
+const LINE = "#0071e3"; // contraste ≥ 3:1 sur fond blanc
+const FILL = "#0071e3";
 
 /** Courbe d'une seule série (pas de légende : le titre la nomme), avec réticule et infobulle au survol. */
 export function AreaChart({ points, label = "vues", withTime = false }: { points: { date: string; value: number }[]; label?: string; withTime?: boolean }) {
@@ -44,13 +44,13 @@ export function AreaChart({ points, label = "vues", withTime = false }: { points
         {ticks.map((t) => (
           <g key={t}>
             <line x1={L} x2={W - R} y1={y(t)} y2={y(t)} stroke="#0d0d0f" strokeOpacity={t === 0 ? 0.2 : 0.07} />
-            <text x={L - 8} y={y(t) + 4} textAnchor="end" fontSize="11" fill="#7a7366" fontFamily="var(--font-jetbrains)">{fmt(t)}</text>
+            <text x={L - 8} y={y(t) + 4} textAnchor="end" fontSize="11" fill="#7a7366" >{fmt(t)}</text>
           </g>
         ))}
         {[0, Math.floor((points.length - 1) / 2), points.length - 1].map((i) => (
           <text key={i} x={x(i)} y={H - 6} textAnchor={i === 0 ? "start" : i === points.length - 1 ? "end" : "middle"} fontSize="11" fill="#7a7366">{short(points[i].date)}</text>
         ))}
-        <path d={area} fill={FILL} fillOpacity={0.35} />
+        <path d={area} fill={FILL} fillOpacity={0.08} />
         <path d={line} fill="none" stroke={LINE} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
         {h && hover !== null && (
           <g>

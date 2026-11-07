@@ -26,7 +26,7 @@ export function SessionWatcher({ userId }: { userId: string | null }) {
   return (
     <div className="fixed inset-0 z-[200] grid place-items-center bg-ink/70 p-4 backdrop-blur-sm" role="alertdialog" aria-modal="true">
       <div className="max-w-md rounded-3xl bg-paper p-6 text-center shadow-2xl">
-        <div className="font-display text-2xl font-extrabold">Tu as changé de compte</div>
+        <div className="font-display text-2xl font-bold">Tu as changé de compte</div>
         <p className="mt-2 text-sm text-zinc-600">
           Tu t&apos;es connecté (ou déconnecté) avec un autre compte dans un autre onglet. Un navigateur ne peut utiliser qu&apos;un compte à la fois :
           cette page n&apos;est plus à jour.

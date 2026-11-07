@@ -65,9 +65,9 @@ export default async function Page({ params, searchParams }: { params: Promise<{
   return (
     <div className="space-y-8">
       <Flash sp={sp} />
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <Stat label="Vues cumulées" value={compact(totalViews)} hint={`${counted.length} clip(s) · ${verified} vérifié(s)`} />
-        <Stat label={product.conversions} value={conv.toLocaleString("fr-FR")} hint={cpa !== null ? `${euros(cpa)} par ${product.conversion}` : "Ajoute-les dans l'onglet Clippeurs"} />
+        <Stat label={product.conversions.charAt(0).toUpperCase() + product.conversions.slice(1)} value={conv.toLocaleString("fr-FR")} hint={cpa !== null ? `${euros(cpa)} par ${product.conversion}` : "Ajoute-les dans l'onglet Clippeurs"} />
         <Stat label="Clips suspects" value={String(flagged)} hint="En quarantaine, non payés" />
         <Stat label="À payer" value={euros(due)} hint={`Déjà versé : ${euros(paid)}`} />
       </div>
@@ -77,7 +77,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
           <div className="card">
             <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
               <h2 className="font-display text-lg font-bold">Vues de l&apos;équipe · 14 jours</h2>
-              <span className="font-mono text-xs text-zinc-500">+{compact(Math.max(gained, 0))} sur la période</span>
+              <span className="text-[13px] text-zinc-500">+{compact(Math.max(gained, 0))} sur la période</span>
             </div>
             <AreaChart points={series} />
           </div>
@@ -90,14 +90,14 @@ export default async function Page({ params, searchParams }: { params: Promise<{
 
       <div>
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap gap-1">
+          <div className="inline-flex max-w-full gap-0.5 overflow-x-auto rounded-[10px] bg-zinc-200/80 p-[3px]">
             {FILTERS.map((f) => {
               const n = f.key ? all.filter((c) => c.status === f.key).length : all.length;
               return (
                 <Link
                   key={f.key}
                   href={f.key ? `?statut=${f.key}` : "?"}
-                  className={`rounded-full px-3 py-1 text-sm ${statut === f.key ? "bg-ink text-paper" : "bg-white text-zinc-600 ring-1 ring-ink/10"}`}
+                  className={`whitespace-nowrap rounded-[8px] px-3.5 py-1.5 text-[13px] font-medium ${statut === f.key ? "bg-white text-ink shadow-[0_1px_3px_rgba(0,0,0,0.12)]" : "text-zinc-600 hover:text-ink"}`}
                 >
                   {f.label} <span className="opacity-60">{n}</span>
                 </Link>
@@ -112,7 +112,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         {clips.length === 0 ? (
           <Empty>Aucun clip ici. Invite tes clippeurs depuis l&apos;onglet « Clippeurs » ou publie ton annonce.</Empty>
         ) : (
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
             {clips.map((c) => (
               <ClipCard
                 key={c.id}

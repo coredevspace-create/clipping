@@ -28,7 +28,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
       <div className="space-y-6">
         <Flash sp={sp} />
         <div>
-          <h2 className="mb-3 font-display text-xl font-bold">Candidatures {pending.length > 0 && <span className="ml-1 rounded-full bg-lime px-2 py-0.5 text-sm text-ink">{pending.length}</span>}</h2>
+          <h2 className="mb-3 font-display text-xl font-bold">Candidatures {pending.length > 0 && <span className="ml-1 rounded-full bg-accent px-2 py-0.5 text-sm text-white">{pending.length}</span>}</h2>
           {apps.length === 0 ? (
             <Empty>{offer?.status === "OPEN" ? "Pas encore de candidature. Ton annonce est visible sur la page Missions." : "Publie ton annonce pour recevoir des candidatures."}</Empty>
           ) : (
@@ -41,7 +41,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
                       {a.user.profile && <div className="text-sm text-zinc-600">{a.user.profile.headline}</div>}
                       <ReputationLine r={reps.get(a.userId)!} />
                     </div>
-                    <span className="font-mono text-xs text-zinc-500">{dateFr(a.createdAt)}</span>
+                    <span className="text-xs text-zinc-500">{dateFr(a.createdAt)}</span>
                   </div>
                   <p className="whitespace-pre-line text-sm text-zinc-700">{a.message}</p>
                   {a.user.profile && <Chips items={platformChips(a.user.profile.platforms)} />}
@@ -53,7 +53,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
                         <form action={decideApplication.bind(null, id, a.id, false)}><Submit className="btn-danger">Refuser</Submit></form>
                       </>
                     ) : (
-                      <span className={`text-sm font-medium ${a.status === "ACCEPTED" ? "text-brand-700" : "text-zinc-500"}`}>{a.status === "ACCEPTED" ? "✓ Acceptée" : "Refusée"}</span>
+                      <span className={`text-sm font-medium ${a.status === "ACCEPTED" ? "text-ok" : "text-zinc-500"}`}>{a.status === "ACCEPTED" ? "✓ Acceptée" : "Refusée"}</span>
                     )}
                   </div>
                 </div>
@@ -92,7 +92,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
           <legend className="label">Plateformes</legend>
           <div className="flex flex-wrap gap-2">
             {PLATFORMS.map((p) => (
-              <label key={p} className="cursor-pointer rounded-full border border-zinc-300 px-3 py-1 text-sm has-[:checked]:border-ink has-[:checked]:bg-ink has-[:checked]:text-lime">
+              <label key={p} className="cursor-pointer rounded-full border border-zinc-300 px-3 py-1 text-sm has-[:checked]:border-accent has-[:checked]:bg-accent has-[:checked]:text-white">
                 <input type="checkbox" name="platforms" value={p} defaultChecked={offer ? platforms.includes(p) : p !== "X"} className="sr-only" />
                 {platformLabel(p)}
               </label>
