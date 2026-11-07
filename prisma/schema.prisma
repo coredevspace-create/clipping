@@ -1,7 +1,9 @@
-// SQLite en local. En production : provider = "postgresql" et DATABASE_URL vers Postgres.
+// PostgreSQL (Neon en production). Les noms de variables correspondent à ceux créés
+// automatiquement par l'intégration Neon de Vercel.
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // connexion « poolée » utilisée par l'app
+  directUrl = env("DATABASE_URL_UNPOOLED") // connexion directe utilisée pour les migrations
 }
 
 generator client {

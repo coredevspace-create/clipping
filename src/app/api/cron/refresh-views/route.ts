@@ -2,9 +2,12 @@ import { NextResponse } from "next/server";
 import { refreshDueClips } from "@/lib/tracking";
 
 export const dynamic = "force-dynamic";
-export const maxDuration = 300;
+export const maxDuration = 60;
 
-/** À appeler toutes les heures (Vercel Cron, GitHub Actions, cron-job.org…) avec Authorization: Bearer <CRON_SECRET>. */
+/**
+ * Relevé des vues. Appelé par Vercel Cron (1×/jour sur l'offre gratuite, en-tête ajouté automatiquement)
+ * et par le workflow GitHub Actions toutes les heures. En-tête requis : Authorization: Bearer <CRON_SECRET>.
+ */
 export async function GET(req: Request) {
   const secret = process.env.CRON_SECRET;
   if (!secret || req.headers.get("authorization") !== `Bearer ${secret}`) {

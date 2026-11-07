@@ -34,6 +34,8 @@ Au-dessus du seuil, le clip est mis en quarantaine et n'est jamais payé sans va
 
 ## Lancer en local
 
+Il te faut Node.js 20 ou plus et une base PostgreSQL. Le plus simple : Docker, avec `docker compose up -d`.
+
 ```bash
 npm install
 ```
@@ -43,7 +45,11 @@ cp .env.example .env
 ```
 
 ```bash
-npx prisma db push
+docker compose up -d
+```
+
+```bash
+npx prisma migrate deploy
 ```
 
 ```bash
@@ -72,11 +78,9 @@ npm test
 npm run lint
 ```
 
-## Mise en production (recommandé)
+## Mise en production
 
-1. **Base de données :** Postgres (Neon, Supabase ou Scaleway). Dans `prisma/schema.prisma`, passe `provider = "postgresql"` et renseigne `DATABASE_URL`.
-2. **Hébergement :** Vercel (ou Scaleway / Clever Cloud pour un hébergement en France). Variables : `AUTH_SECRET` (`openssl rand -base64 32`), `APP_URL`, `CRON_SECRET`, `YOUTUBE_API_KEY`. Mets `VIEWS_DEMO_MODE=false`.
-3. **Cron horaire :** appelle `GET /api/cron/refresh-views` avec l'en-tête `Authorization: Bearer <CRON_SECRET>` (Vercel Cron, cron-job.org…).
+Voir le guide pas à pas : [docs/DEPLOIEMENT-VERCEL.md](docs/DEPLOIEMENT-VERCEL.md) (Vercel + Neon PostgreSQL, relevé horaire des vues via GitHub Actions).
 
 ## Structure
 
