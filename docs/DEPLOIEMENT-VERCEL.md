@@ -18,7 +18,9 @@ Compte environ 15 minutes. Tout se fait depuis le navigateur.
 
 4. Clique sur **Deploy**. **Ce premier déploiement va échouer**, car il n'y a pas encore de base de données. C'est normal.
 
-## 2. Créer la base de données (Neon, gratuit)
+## 2. Créer la base de données (gratuit)
+
+> Si Vercel te propose **Prisma Postgres** pendant l'import, clique simplement sur **Add** : ça fonctionne aussi (région Frankfurt). Sinon, utilise Neon comme ci-dessous.
 
 1. Dans ton projet Vercel, ouvre l'onglet **Storage → Create Database → Neon (Serverless Postgres) → Continue**.
 2. Choisis la région **Frankfurt (eu-central-1)** (proche de la France, et utile pour le RGPD), puis l'offre gratuite.

@@ -5,7 +5,7 @@
   "description": "ClipPay — le SaaS des créateurs qui gèrent leur propre équipe de clippeurs",
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && prisma migrate deploy && next build",
+    "build": "prisma generate && node scripts/migrate.mjs && next build",
     "start": "next start",
     "postinstall": "prisma generate",
     "lint": "tsc --noEmit",
