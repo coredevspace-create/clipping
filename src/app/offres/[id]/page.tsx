@@ -6,6 +6,7 @@ import { Flash } from "@/components/ui";
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { dateFr } from "@/lib/format";
+import { Submit } from "@/components/submit";
 
 const APP_STATUS: Record<string, string> = {
   PENDING: "Candidature envoyée : en attente de réponse du créateur.",
@@ -72,7 +73,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
             <h2 className="font-display text-lg font-bold">Postuler</h2>
             <textarea name="message" required minLength={20} rows={5} className="input" placeholder="Présente-toi : ton expérience, tes comptes, des exemples de clips, pourquoi ce produit te parle…" />
             <p className="text-xs text-zinc-500">Le créateur verra aussi ton annonce et tes statistiques vérifiées sur la plateforme.</p>
-            <button className="btn">Envoyer ma candidature</button>
+            <Submit className="btn">Envoyer ma candidature</Submit>
           </form>
         )}
       </div>

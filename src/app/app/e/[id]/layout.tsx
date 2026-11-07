@@ -12,6 +12,7 @@ export default async function Layout({ children, params }: { children: React.Rea
       <NavTabs
         items={[
           { href: base, label: "Clips", exact: true },
+          { href: `${base}/discussion`, label: "💬 Discussion" },
           { href: `${base}/clippeurs`, label: "Clippeurs" },
           { href: `${base}/annonce`, label: "Annonce & recrutement" },
           { href: `${base}/sources`, label: "Moments à clipper" },

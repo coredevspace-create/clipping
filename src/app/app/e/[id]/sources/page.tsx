@@ -3,6 +3,7 @@ import { Empty, Flash } from "@/components/ui";
 import { requireOwner } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { dateFr, timecode } from "@/lib/format";
+import { Submit } from "@/components/submit";
 
 export default async function Page({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ erreur?: string; ok?: string }> }) {
   const { id } = await params;
@@ -23,7 +24,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         <form action={createSource.bind(null, id)} className="grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
           <input name="title" required placeholder="Titre (ex. Live lancement v2)" className="input" />
           <input name="url" required type="url" placeholder="Lien YouTube, Drive, Dropbox…" className="input" />
-          <button className="btn">Ajouter</button>
+          <Submit className="btn">Ajouter</Submit>
           <input name="notes" placeholder="Consignes pour les clippeurs (optionnel)" className="input sm:col-span-3" />
         </form>
       </div>
@@ -39,7 +40,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
               {s.notes && <p className="mt-1 text-sm text-zinc-600">{s.notes}</p>}
               <p className="text-xs text-zinc-400">Ajoutée le {dateFr(s.createdAt)}</p>
             </div>
-            <form action={deleteSource.bind(null, id, s.id)}><button className="btn-danger">Supprimer</button></form>
+            <form action={deleteSource.bind(null, id, s.id)}><Submit className="btn-danger">Supprimer</Submit></form>
           </div>
 
           {s.moments.length > 0 && (
@@ -59,10 +60,10 @@ export default async function Page({ params, searchParams }: { params: Promise<{
                     </td>
                     <td className="whitespace-nowrap text-right">
                       {m.reservedBy && m.clips.length === 0 && (
-                        <form action={releaseMoment.bind(null, id, m.id)} className="inline"><button className="btn-ghost mr-1">Libérer</button></form>
+                        <form action={releaseMoment.bind(null, id, m.id)} className="inline"><Submit className="btn-ghost mr-1">Libérer</Submit></form>
                       )}
                       {m.clips.length === 0 && (
-                        <form action={deleteMoment.bind(null, id, m.id)} className="inline"><button className="btn-danger">×</button></form>
+                        <form action={deleteMoment.bind(null, id, m.id)} className="inline"><Submit className="btn-danger">×</Submit></form>
                       )}
                     </td>
                   </tr>
@@ -75,7 +76,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
             <input name="start" required placeholder="Début 12:30" className="input" />
             <input name="end" required placeholder="Fin 13:15" className="input" />
             <input name="title" required placeholder="Le moment (ex. « Comment on a eu nos 100 premiers clients »)" className="input" />
-            <button className="btn-ghost">+ Moment</button>
+            <Submit className="btn-ghost">+ Moment</Submit>
           </form>
         </div>
       ))}

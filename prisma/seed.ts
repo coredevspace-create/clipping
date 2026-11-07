@@ -81,6 +81,20 @@ async function main() {
       await recordStats(clip.id, stats!, "DEMO", at);
     }
   }
+  // ——— Discussion d'équipe ———
+  const ago = (m: number) => new Date(now - m * 60_000);
+  const lea = members[0], sami = members[1];
+  await db.message.createMany({
+    data: [
+      { workspaceId: ws.id, userId: owner.id, channel: "annonces", body: "Bienvenue dans l'équipe ! Nouveau live jeudi 20 h : les moments à clipper seront dans l'onglet « Moments à clipper » vendredi matin.", createdAt: ago(60 * 26) },
+      { workspaceId: ws.id, userId: owner.id, channel: "annonces", body: "Rappel : sous-titres obligatoires et mention de Facturo dans la description. Les clips avec des vues achetées sont refusés.", createdAt: ago(60 * 3) },
+      { workspaceId: ws.id, userId: lea.userId, channel: "general", body: "Hello tout le monde 👋 mon clip sur le premier client LinkedIn vient de passer les 15k vues !", createdAt: ago(95) },
+      { workspaceId: ws.id, userId: owner.id, channel: "general", body: "Bravo Léa 🔥 le hook des 2 premières secondes est parfait.", createdAt: ago(90) },
+      { workspaceId: ws.id, userId: sami.userId, channel: "entraide", body: "Vous utilisez quoi pour les sous-titres animés ? Je cherche un truc rapide.", createdAt: ago(40) },
+      { workspaceId: ws.id, userId: lea.userId, channel: "entraide", body: "CapCut avec le style « karaoké », et je corrige à la main les noms propres.", createdAt: ago(35) },
+    ],
+  });
+
   // ——— Place de marché ———
   await db.offer.create({
     data: {

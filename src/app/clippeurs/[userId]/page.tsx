@@ -6,6 +6,7 @@ import { Flash } from "@/components/ui";
 import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { canSeeContact, reputations, splitCsv } from "@/lib/marketplace";
+import { Submit } from "@/components/submit";
 
 export default async function Page({ params, searchParams }: { params: Promise<{ userId: string }>; searchParams: Promise<{ erreur?: string; ok?: string }> }) {
   const { userId } = await params;
@@ -58,7 +59,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
             <form action={inviteClipper.bind(null, userId)} className="space-y-3">
               <select name="workspaceId" className="input">{myTeams.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}</select>
               <textarea name="message" required minLength={10} rows={4} className="input" placeholder="Présente ton produit et pourquoi son profil t'intéresse…" />
-              <button className="btn">Envoyer l&apos;invitation</button>
+              <Submit className="btn">Envoyer l&apos;invitation</Submit>
             </form>
           )}
         </div>

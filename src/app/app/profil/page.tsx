@@ -4,6 +4,7 @@ import { Flash, PageTitle } from "@/components/ui";
 import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { NICHES, platformLabel, PLATFORMS, splitCsv } from "@/lib/marketplace";
+import { Submit } from "@/components/submit";
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ erreur?: string; ok?: string; bienvenue?: string }> }) {
   const user = await requireUser();
@@ -55,7 +56,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ e
           <input type="checkbox" name="available" defaultChecked={p?.available ?? true} className="h-4 w-4 accent-[var(--color-ink)]" />
           Je suis disponible pour de nouvelles équipes (visible dans l&apos;annuaire)
         </label>
-        <button className="btn">{p ? "Mettre à jour mon annonce" : "Publier mon annonce"}</button>
+        <Submit className="btn">{p ? "Mettre à jour mon annonce" : "Publier mon annonce"}</Submit>
       </form>
     </div>
   );

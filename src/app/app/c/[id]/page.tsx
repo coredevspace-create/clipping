@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import { dateFr, euros, num, timecode } from "@/lib/format";
 import { clipEarnings, computePayouts } from "@/lib/payouts";
 import { PLATFORM_LABELS, type Platform } from "@/lib/platforms";
+import { Submit } from "@/components/submit";
 
 export default async function Page({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ erreur?: string; ok?: string }> }) {
   const { id } = await params;
@@ -32,9 +33,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
   return (
     <div className="space-y-8">
       <div>
-        <div className="eyebrow text-zinc-500">Espace clippeur</div>
-        <h1 className="mt-2 font-display text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">{workspace.name}</h1>
-        <p className="mt-1 text-sm text-zinc-500">
+        <p className="text-sm text-zinc-500">
           {euros(workspace.cpmCents)} / 1 000 vues · à partir de {num(workspace.minViews)} vues · max {euros(workspace.maxPayoutPerClipCents)} par clip · validation sous {workspace.holdDays} j
         </p>
       </div>
@@ -55,7 +54,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
             <option value="">Aucun moment réservé</option>
             {mine.map((m) => <option key={m.id} value={m.id}>{m.title}</option>)}
           </select>
-          <button className="btn">Envoyer</button>
+          <Submit className="btn">Envoyer</Submit>
         </form>
       </div>
 
@@ -81,9 +80,9 @@ export default async function Page({ params, searchParams }: { params: Promise<{
                 <div className="mt-3 flex gap-2">
                   <a href={m.source.url} target="_blank" rel="noreferrer" className="btn-ghost">Voir la source</a>
                   {m.reservedById ? (
-                    <form action={unreserveMoment.bind(null, id, m.id)}><button className="btn-ghost">Annuler ma réservation</button></form>
+                    <form action={unreserveMoment.bind(null, id, m.id)}><Submit className="btn-ghost">Annuler ma réservation</Submit></form>
                   ) : (
-                    <form action={reserveMoment.bind(null, id, m.id)}><button className="btn">Réserver</button></form>
+                    <form action={reserveMoment.bind(null, id, m.id)}><Submit className="btn">Réserver</Submit></form>
                   )}
                 </div>
               </div>
@@ -126,7 +125,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
             <option value="PAYPAL">PayPal</option>
           </select>
           <input name="details" defaultValue={membership.payoutDetails ?? ""} placeholder="FR76… ou email PayPal" className="input" />
-          <button className="btn">Enregistrer</button>
+          <Submit className="btn">Enregistrer</Submit>
         </form>
       </div>
     </div>

@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import { compact, dateFr, euros, num } from "@/lib/format";
 import { computePayouts } from "@/lib/payouts";
 import { PLATFORM_LABELS, type Platform } from "@/lib/platforms";
+import { Submit } from "@/components/submit";
 
 const FILTERS = [
   { key: "", label: "Tous" },
@@ -59,7 +60,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
           ))}
         </div>
         <form action={refreshAllClips.bind(null, id)}>
-          <button className="btn-ghost">↻ Actualiser les vues</button>
+          <Submit className="btn-ghost">↻ Actualiser les vues</Submit>
         </form>
       </div>
 
@@ -89,10 +90,10 @@ export default async function Page({ params, searchParams }: { params: Promise<{
                     <td><StatusBadge status={c.status} /></td>
                     <td className="whitespace-nowrap text-right">
                       {c.status !== "APPROVED" && (
-                        <form action={approveClip.bind(null, id, c.id)} className="inline"><button className="btn-ghost mr-1">Valider</button></form>
+                        <form action={approveClip.bind(null, id, c.id)} className="inline"><Submit className="btn-ghost mr-1">Valider</Submit></form>
                       )}
                       {c.status !== "REJECTED" && (
-                        <form action={rejectClip.bind(null, id, c.id)} className="inline"><button className="btn-danger">Refuser</button></form>
+                        <form action={rejectClip.bind(null, id, c.id)} className="inline"><Submit className="btn-danger">Refuser</Submit></form>
                       )}
                     </td>
                   </tr>

@@ -2,6 +2,7 @@ import { updateSettings } from "@/app/actions/creator";
 import { Flash } from "@/components/ui";
 import { requireOwner } from "@/lib/auth";
 import { planOf } from "@/lib/config";
+import { Submit } from "@/components/submit";
 
 export default async function Page({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ erreur?: string; ok?: string }> }) {
   const { id } = await params;
@@ -40,7 +41,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
           Abonnement : <strong>{planOf(w.plan).label}</strong> ({planOf(w.plan).priceEur} €/mois). La gestion de l&apos;abonnement arrive avec Stripe Billing.
         </div>
 
-        <button className="btn">Enregistrer</button>
+        <Submit className="btn">Enregistrer</Submit>
       </form>
     </div>
   );

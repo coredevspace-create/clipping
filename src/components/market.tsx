@@ -53,7 +53,7 @@ export function FilterBar({ action, q, value, options, name, platform }: { actio
 }
 
 export function Avatar({ name, size = 40 }: { name: string; size?: number }) {
-  const initials = name.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase();
+  const initials = (name.match(/\p{L}+/gu) ?? ["?"]).map((w) => w[0]).join("").slice(0, 2).toUpperCase();
   return (
     <span className="grid shrink-0 place-items-center rounded-full bg-ink font-display font-bold text-lime" style={{ width: size, height: size, fontSize: size / 2.6 }}>
       {initials}

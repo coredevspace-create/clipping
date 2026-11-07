@@ -4,6 +4,7 @@ import { Flash } from "@/components/ui";
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { euros, num } from "@/lib/format";
+import { Submit } from "@/components/submit";
 
 export default async function Page({ params, searchParams }: { params: Promise<{ code: string }>; searchParams: Promise<{ erreur?: string }> }) {
   const { code } = await params;
@@ -28,7 +29,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         </div>
         {user ? (
           <form action={joinWorkspace.bind(null, code)}>
-            <button className="btn w-full">Rejoindre l&apos;équipe</button>
+            <Submit className="btn w-full">Rejoindre l&apos;équipe</Submit>
           </form>
         ) : (
           <div className="space-y-2">

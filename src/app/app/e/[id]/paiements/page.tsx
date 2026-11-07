@@ -4,6 +4,7 @@ import { requireOwner } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { dateFr, euros, num } from "@/lib/format";
 import { computePayouts } from "@/lib/payouts";
+import { Submit } from "@/components/submit";
 
 export default async function Page({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ erreur?: string; ok?: string }> }) {
   const { id } = await params;
@@ -37,7 +38,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
             </p>
           </div>
           <form action={createPayoutRun.bind(null, id)}>
-            <button className="btn" disabled={drafts.length === 0}>Générer le lot de paiement</button>
+            <Submit className="btn" disabled={drafts.length === 0}>Générer le lot de paiement</Submit>
           </form>
         </div>
         {drafts.length === 0 ? (
@@ -89,7 +90,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
                         {p.status === "PAID" ? (
                           <span className="text-xs text-brand-700">Payé le {dateFr(p.paidAt)}</span>
                         ) : (
-                          <form action={markPayoutPaid.bind(null, id, p.id)}><button className="btn-ghost">Marquer payé</button></form>
+                          <form action={markPayoutPaid.bind(null, id, p.id)}><Submit className="btn-ghost">Marquer payé</Submit></form>
                         )}
                       </td>
                     </tr>

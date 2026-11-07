@@ -8,6 +8,7 @@ import { dateTimeFr, euros, num, timecode } from "@/lib/format";
 import type { FraudReason } from "@/lib/fraud";
 import { clipEarnings } from "@/lib/payouts";
 import { PLATFORM_LABELS, type Platform } from "@/lib/platforms";
+import { Submit } from "@/components/submit";
 
 export default async function Page({ params, searchParams }: { params: Promise<{ id: string; clipId: string }>; searchParams: Promise<{ erreur?: string; ok?: string }> }) {
   const { id, clipId } = await params;
@@ -36,9 +37,9 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         </div>
         <div className="flex flex-wrap gap-2">
           <StatusBadge status={clip.status} />
-          {clip.status !== "APPROVED" && <form action={approveClip.bind(null, id, clip.id)}><button className="btn-ghost">Valider</button></form>}
-          {clip.status !== "REJECTED" && <form action={rejectClip.bind(null, id, clip.id)}><button className="btn-danger">Refuser</button></form>}
-          {(clip.status === "REJECTED" || clip.status === "APPROVED") && <form action={reopenClip.bind(null, id, clip.id)}><button className="btn-ghost">Remettre en vérification</button></form>}
+          {clip.status !== "APPROVED" && <form action={approveClip.bind(null, id, clip.id)}><Submit className="btn-ghost">Valider</Submit></form>}
+          {clip.status !== "REJECTED" && <form action={rejectClip.bind(null, id, clip.id)}><Submit className="btn-danger">Refuser</Submit></form>}
+          {(clip.status === "REJECTED" || clip.status === "APPROVED") && <form action={reopenClip.bind(null, id, clip.id)}><Submit className="btn-ghost">Remettre en vérification</Submit></form>}
         </div>
       </div>
 
@@ -53,7 +54,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         <div className="card lg:col-span-2">
           <div className="mb-3 flex items-center justify-between">
             <h3 className="font-display text-lg font-bold">Courbe des vues</h3>
-            <form action={refreshOneClip.bind(null, id, clip.id)}><button className="btn-ghost">↻ Actualiser</button></form>
+            <form action={refreshOneClip.bind(null, id, clip.id)}><Submit className="btn-ghost">↻ Actualiser</Submit></form>
           </div>
           <ViewsChart points={clip.snapshots.map((s) => ({ t: s.capturedAt.getTime(), v: s.views }))} />
           <p className="mt-2 text-xs text-zinc-500">{clip.snapshots.length} relevé(s). Une courbe organique monte puis ralentit ; une marche d&apos;escalier brutale trahit souvent des bots.</p>
@@ -88,7 +89,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
           <input name="likes" placeholder="Likes" inputMode="numeric" className="input" />
           <input name="comments" placeholder="Commentaires" inputMode="numeric" className="input" />
           <input name="shares" placeholder="Partages" inputMode="numeric" className="input" />
-          <button className="btn">Enregistrer</button>
+          <Submit className="btn">Enregistrer</Submit>
         </form>
       </div>
     </div>

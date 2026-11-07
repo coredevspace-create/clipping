@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import Link from "next/link";
+import { Suspense } from "react";
 import { logout } from "@/app/actions/auth";
 import { Logo } from "@/components/logo";
+import { NavProgress } from "@/components/nav-progress";
+import { Submit } from "@/components/submit";
 import { currentUser } from "@/lib/auth";
 import { APP_NAME } from "@/lib/config";
 import "./globals.css";
@@ -21,6 +24,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="fr" className={`${bricolage.variable} ${instrument.variable} ${jetbrains.variable}`}>
       <body>
+        <Suspense fallback={null}>
+          <NavProgress />
+        </Suspense>
         <header className="sticky top-0 z-40 border-b border-ink/10 bg-paper/85 backdrop-blur-md">
           <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4">
             <Link href={user ? "/app" : "/"} aria-label={APP_NAME}><Logo /></Link>
@@ -30,7 +36,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               {user ? (
                 <>
                   <Link href="/app" className="rounded-full px-3 py-2 font-medium text-zinc-700 hover:bg-ink/5">Mon espace</Link>
-                  <form action={logout}><button className="btn-ghost">Déconnexion</button></form>
+                  <form action={logout}><Submit className="btn-ghost">Déconnexion</Submit></form>
                 </>
               ) : (
                 <>

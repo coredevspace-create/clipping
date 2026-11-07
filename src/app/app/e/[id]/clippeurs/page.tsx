@@ -5,6 +5,7 @@ import { appUrl, planOf } from "@/lib/config";
 import { db } from "@/lib/db";
 import { euros, num } from "@/lib/format";
 import { computePayouts } from "@/lib/payouts";
+import { Submit } from "@/components/submit";
 
 export default async function Page({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ erreur?: string; ok?: string }> }) {
   const { id } = await params;
@@ -29,7 +30,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         </p>
         <div className="flex flex-wrap gap-2">
           <input readOnly value={invite} className="input flex-1 font-mono" />
-          <form action={regenerateInvite.bind(null, id)}><button className="btn-ghost">Régénérer</button></form>
+          <form action={regenerateInvite.bind(null, id)}><Submit className="btn-ghost">Régénérer</Submit></form>
         </div>
       </div>
 
@@ -55,7 +56,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
                     <td className="text-right font-semibold">{euros(due)}</td>
                     <td className="text-xs">{m.payoutMethod ? <span className="text-brand-700">{m.payoutMethod} ✓</span> : <span className="text-amber-700">Non renseigné</span>}</td>
                     <td className="text-right">
-                      <form action={removeMember.bind(null, id, m.id)}><button className="btn-danger">Retirer</button></form>
+                      <form action={removeMember.bind(null, id, m.id)}><Submit className="btn-danger">Retirer</Submit></form>
                     </td>
                   </tr>
                 );

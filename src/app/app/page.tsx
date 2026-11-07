@@ -4,6 +4,7 @@ import { Empty, Flash, PageTitle } from "@/components/ui";
 import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { euros } from "@/lib/format";
+import { Submit } from "@/components/submit";
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ erreur?: string; ok?: string }> }) {
   const user = await requireUser();
@@ -72,8 +73,8 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ e
                 <p className="text-xs text-zinc-500">{euros(i.workspace.cpmCents)} / 1 000 vues · max {euros(i.workspace.maxPayoutPerClipCents)} par clip</p>
               </div>
               <div className="flex gap-2">
-                <form action={respondInvitation.bind(null, i.id, true)}><button className="btn">Rejoindre</button></form>
-                <form action={respondInvitation.bind(null, i.id, false)}><button className="btn-ghost">Décliner</button></form>
+                <form action={respondInvitation.bind(null, i.id, true)}><Submit className="btn">Rejoindre</Submit></form>
+                <form action={respondInvitation.bind(null, i.id, false)}><Submit className="btn-ghost">Décliner</Submit></form>
               </div>
             </div>
           ))}
@@ -103,7 +104,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ e
                 <Link href={`/offres/${a.offerId}`} className="font-medium hover:underline">{a.offer.workspace.name} — {a.offer.title}</Link>
                 <div className="flex items-center gap-3">
                   <span className={a.status === "ACCEPTED" ? "text-brand-700" : "text-zinc-500"}>{{ PENDING: "En attente", ACCEPTED: "✓ Acceptée", REJECTED: "Non retenue" }[a.status]}</span>
-                  {a.status === "PENDING" && <form action={withdrawApplication.bind(null, a.id)}><button className="text-xs text-zinc-500 underline">Retirer</button></form>}
+                  {a.status === "PENDING" && <form action={withdrawApplication.bind(null, a.id)}><Submit className="text-xs text-zinc-500 underline">Retirer</Submit></form>}
                 </div>
               </div>
             ))}

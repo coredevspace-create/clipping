@@ -36,6 +36,18 @@ export async function destroySession() {
   (await cookies()).delete(COOKIE);
 }
 
+/** Identifiant de l'utilisateur connecté, lu depuis le jeton signé, sans requête en base (routes appelées souvent). */
+export async function currentUserId(): Promise<string | null> {
+  const token = (await cookies()).get(COOKIE)?.value;
+  if (!token) return null;
+  try {
+    const { payload } = await jwtVerify(token, secret());
+    return payload.sub ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export async function currentUser() {
   const token = (await cookies()).get(COOKIE)?.value;
   if (!token) return null;

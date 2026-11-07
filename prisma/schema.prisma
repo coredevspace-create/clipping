@@ -23,6 +23,7 @@ model User {
   profile      ClipperProfile?
   applications Application[]
   invitations  Invitation[]
+  messages     Message[]
 }
 
 /// L'annonce d'un clippeur : visible par les créateurs dans l'annuaire.
@@ -114,6 +115,7 @@ model Workspace {
   payoutRuns            PayoutRun[]
   offer                 Offer?
   invitations           Invitation[]
+  messages              Message[]
 }
 
 model Membership {
@@ -251,4 +253,18 @@ model PayoutLine {
   clip        Clip   @relation(fields: [clipId], references: [id])
   views       Int
   amountCents Int
+}
+
+/// Discussion d'équipe (salons type Discord) : créateur + clippeurs actifs.
+model Message {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channel     String // general | annonces | entraide
+  body        String
+  createdAt   DateTime  @default(now())
+
+  @@index([workspaceId, channel, createdAt])
 }

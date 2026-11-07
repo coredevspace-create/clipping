@@ -1,6 +1,7 @@
 import { createWorkspace } from "@/app/actions/creator";
 import { Flash, PageTitle } from "@/components/ui";
 import { requireUser } from "@/lib/auth";
+import { Submit } from "@/components/submit";
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ erreur?: string }> }) {
   await requireUser();
@@ -20,7 +21,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ e
           <input name="cpm" defaultValue="1" inputMode="decimal" className="input" />
           <p className="mt-1 text-xs text-zinc-500">Modifiable plus tard, avec le seuil minimum, le plafond par clip et l&apos;anti-fraude.</p>
         </div>
-        <button className="btn w-full">Créer l&apos;équipe</button>
+        <Submit className="btn w-full">Créer l&apos;équipe</Submit>
       </form>
     </div>
   );
