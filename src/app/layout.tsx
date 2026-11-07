@@ -6,6 +6,8 @@ import { logout } from "@/app/actions/auth";
 import { Logo } from "@/components/logo";
 import { NavProgress } from "@/components/nav-progress";
 import { Submit } from "@/components/submit";
+import { SessionWatcher } from "@/components/session-watcher";
+import { Avatar } from "@/components/market";
 import { currentUser } from "@/lib/auth";
 import { APP_NAME } from "@/lib/config";
 import "./globals.css";
@@ -27,6 +29,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Suspense fallback={null}>
           <NavProgress />
         </Suspense>
+        <SessionWatcher userId={user?.id ?? null} />
         <header className="sticky top-0 z-40 border-b border-ink/10 bg-paper/85 backdrop-blur-md">
           <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4">
             <Link href={user ? "/app" : "/"} aria-label={APP_NAME}><Logo /></Link>
@@ -36,6 +39,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               {user ? (
                 <>
                   <Link href="/app" className="rounded-full px-3 py-2 font-medium text-zinc-700 hover:bg-ink/5">Mon espace</Link>
+                  <span className="hidden items-center gap-2 rounded-full border border-ink/10 bg-white py-1 pl-1 pr-3 md:flex" title={`Connecté en tant que ${user.name} (${user.email})`}>
+                    <Avatar name={user.name} size={26} />
+                    <span className="max-w-32 truncate text-sm font-medium">{user.name}</span>
+                    <span className={`rounded-full px-2 py-0.5 font-mono text-[10px] font-semibold ${user.role === "CLIPPER" ? "bg-lime text-ink" : "bg-ink text-lime"}`}>
+                      {user.role === "CLIPPER" ? "CLIPPEUR" : "CRÉATEUR"}
+                    </span>
+                  </span>
                   <form action={logout}><Submit className="btn-ghost">Déconnexion</Submit></form>
                 </>
               ) : (

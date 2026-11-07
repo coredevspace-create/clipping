@@ -54,7 +54,7 @@ export async function currentUser() {
   try {
     const { payload } = await jwtVerify(token, secret());
     if (!payload.sub) return null;
-    return db.user.findUnique({ where: { id: payload.sub }, select: { id: true, email: true, name: true } });
+    return db.user.findUnique({ where: { id: payload.sub }, select: { id: true, email: true, name: true, role: true } });
   } catch {
     return null;
   }
