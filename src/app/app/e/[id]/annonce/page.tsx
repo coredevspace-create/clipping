@@ -2,6 +2,7 @@ import Link from "next/link";
 import { decideApplication, saveOffer } from "@/app/actions/marketplace";
 import { Chips, platformChips, ReputationLine } from "@/components/market";
 import { Empty, Flash } from "@/components/ui";
+import { BriefTemplates } from "@/components/brief-templates";
 import { requireOwner } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { dateFr } from "@/lib/format";
@@ -84,8 +85,8 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         </div>
         <div><label className="label">Titre</label><input name="title" required maxLength={90} defaultValue={offer?.title ?? `Clippeurs recherchés pour ${workspace.name}`} className="input" /></div>
         <div>
-          <label className="label">Niche</label>
-          <select name="niche" defaultValue={offer?.niche ?? NICHES[0]} className="input">{NICHES.map((n) => <option key={n}>{n}</option>)}</select>
+          <label className="label">Catégorie</label>
+          <select name="niche" defaultValue={offer?.niche ?? (workspace.productType === "WEB" ? "SaaS web" : workspace.productType === "GAME" ? "Jeu mobile" : workspace.productType === "DESKTOP" ? "Logiciel" : workspace.productType === "EXTENSION" ? "Extension navigateur" : "App mobile")} className="input">{NICHES.map((n) => <option key={n}>{n}</option>)}</select>
         </div>
         <fieldset>
           <legend className="label">Plateformes</legend>
@@ -98,8 +99,12 @@ export default async function Page({ params, searchParams }: { params: Promise<{
             ))}
           </div>
         </fieldset>
-        <div><label className="label">Description</label><textarea name="description" required rows={6} defaultValue={offer?.description} className="input" placeholder="Ton produit, ta cible, le ton des clips, ce qui fait un bon clip pour toi…" /></div>
-        <div><label className="label">Exigences (facultatif)</label><textarea name="requirements" rows={3} defaultValue={offer?.requirements ?? ""} className="input" placeholder="Sous-titres, durée, mention du produit, fréquence…" /></div>
+        <div><label className="label">Description</label><textarea name="description" required rows={6} defaultValue={offer?.description} className="input" placeholder="Ton app en une phrase, ta cible (âge, centres d'intérêt), le ton des clips, ce qui fait un bon clip pour toi…" /></div>
+        <div>
+          <label className="label">Consignes pour les clippeurs</label>
+          <textarea name="requirements" rows={7} defaultValue={offer?.requirements ?? ""} className="input text-xs" placeholder="Choisis un modèle ci-dessous ou écris tes consignes : format, durée, hook, mention de l'app…" />
+          <div className="mt-2"><BriefTemplates /></div>
+        </div>
         <p className="text-xs text-zinc-500">La rémunération affichée vient de tes réglages ({(workspace.cpmCents / 100).toLocaleString("fr-FR", { style: "currency", currency: "EUR" })} / 1 000 vues).</p>
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" name="open" defaultChecked={offer ? offer.status === "OPEN" : true} className="h-4 w-4" />

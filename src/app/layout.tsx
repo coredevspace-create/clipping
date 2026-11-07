@@ -15,8 +15,8 @@ const instrument = Instrument_Serif({ subsets: ["latin"], weight: "400", style: 
 const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains", display: "swap" });
 
 export const metadata: Metadata = {
-  title: { default: `${APP_NAME} — Tes clippeurs, sans le chaos`, template: `%s · ${APP_NAME}` },
-  description: "Recrute des clippeurs, reçois leurs clips, vérifie chaque vue et paie au centime près. Sans commission, en français.",
+  title: { default: `${APP_NAME} — Le clipping pour les apps et logiciels grand public`, template: `%s · ${APP_NAME}` },
+  description: "Recrute des clippeurs pour ton app, vérifie chaque vue, bloque les bots et mesure le coût par téléchargement de chaque clippeur. Sans commission, en français.",
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

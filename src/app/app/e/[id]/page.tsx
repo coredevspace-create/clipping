@@ -8,7 +8,8 @@ import { Empty, Flash, Stat } from "@/components/ui";
 import { requireOwner } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { compact, euros } from "@/lib/format";
-import { computePayouts } from "@/lib/payouts";
+import { clipEarnings, computePayouts } from "@/lib/payouts";
+import { costPer, productOf } from "@/lib/product";
 import { dailySeries } from "@/lib/series";
 
 const FILTERS = [
@@ -43,6 +44,10 @@ export default async function Page({ params, searchParams }: { params: Promise<{
   const due = computePayouts(all.filter((c) => c.status === "APPROVED" || c.status === "PENDING"), workspace).reduce((s, d) => s + d.amountCents, 0);
   const paid = all.reduce((s, c) => s + c.paidCents, 0);
   const verified = counted.filter((c) => c.ownershipVerified).length;
+  const product = productOf(workspace.productType);
+  const conv = (await db.conversion.aggregate({ where: { workspaceId: id }, _sum: { quantity: true } }))._sum.quantity ?? 0;
+  const earned = counted.reduce((s, c) => s + clipEarnings(c.views, workspace), 0);
+  const cpa = costPer(earned, conv);
 
   const series = dailySeries(counted.map((c) => c.snapshots), 14).map((p) => ({ date: p.date.toISOString(), value: p.views }));
   const gained = series.length > 1 ? series[series.length - 1].value - series[0].value : 0;
@@ -62,9 +67,9 @@ export default async function Page({ params, searchParams }: { params: Promise<{
       <Flash sp={sp} />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Stat label="Vues cumulées" value={compact(totalViews)} hint={`${counted.length} clip(s) · ${verified} vérifié(s)`} />
+        <Stat label={product.conversions} value={conv.toLocaleString("fr-FR")} hint={cpa !== null ? `${euros(cpa)} par ${product.conversion}` : "Ajoute-les dans l'onglet Clippeurs"} />
         <Stat label="Clips suspects" value={String(flagged)} hint="En quarantaine, non payés" />
-        <Stat label="À payer" value={euros(due)} hint={`Après ${workspace.holdDays} j de vérification`} />
-        <Stat label="Déjà versé" value={euros(paid)} />
+        <Stat label="À payer" value={euros(due)} hint={`Déjà versé : ${euros(paid)}`} />
       </div>
 
       {all.length > 0 && (

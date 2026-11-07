@@ -3,16 +3,19 @@ import { db } from "./db";
 import { PLATFORM_LABELS, type Platform } from "./platforms";
 import { randomBytes } from "node:crypto";
 
+/** Catégories de produits grand public (annonces des créateurs et spécialités des clippeurs). */
 export const NICHES = [
-  "SaaS / Tech",
-  "IA",
-  "Business / Entrepreneuriat",
-  "Marketing / Growth",
-  "Finance / Investissement",
+  "App mobile",
+  "Jeu mobile",
+  "SaaS web",
+  "Logiciel",
+  "Extension navigateur",
+  "IA grand public",
+  "Finance / budget",
+  "Santé / sport",
   "Productivité",
-  "Formation / E-learning",
-  "Coaching",
-  "Podcast / Interview",
+  "Éducation / langues",
+  "Social / rencontres",
   "Autre",
 ] as const;
 

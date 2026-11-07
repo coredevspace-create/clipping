@@ -4,6 +4,7 @@ import { Empty, PageTitle } from "@/components/ui";
 import { db } from "@/lib/db";
 import { euros, num } from "@/lib/format";
 import { NICHES } from "@/lib/marketplace";
+import { productOf } from "@/lib/product";
 
 export const metadata = { title: "Missions de clipping" };
 
@@ -24,7 +25,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ q
 
   return (
     <div>
-      <PageTitle title="Missions de clipping" subtitle="Des fondateurs cherchent des clippeurs pour faire connaître leur produit. Postule, clippe, sois payé à la vue." />
+      <PageTitle title="Missions de clipping" subtitle="Des apps et logiciels grand public cherchent des clippeurs. Postule, clippe, sois payé à la vue." />
       <FilterBar action="/offres" q={sp.q} name="niche" value={sp.niche} options={NICHES} platform={sp.plateforme} />
       {offers.length === 0 ? (
         <Empty>Aucune annonce ne correspond pour l&apos;instant.</Empty>
@@ -34,7 +35,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ q
             <Link key={o.id} href={`/offres/${o.id}`} className="card flex flex-col gap-3 transition hover:border-brand-500">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <div className="text-xs font-medium text-zinc-500">{o.workspace.name}</div>
+                  <div className="text-xs font-medium text-zinc-500">{o.workspace.name} · {productOf(o.workspace.productType).label}</div>
                   <h2 className="font-display text-lg font-bold">{o.title}</h2>
                 </div>
                 <div className="whitespace-nowrap text-right">

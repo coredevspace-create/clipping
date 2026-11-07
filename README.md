@@ -1,8 +1,17 @@
 # Clipsquad (nom provisoire)
 
-Le SaaS des fondateurs qui font promouvoir leur produit par une équipe de clippeurs.
-Réception des clips, suivi automatique des vues, anti-fraude, moments à clipper sans doublon, calcul des paiements.
+**Le clipping pour les apps, SaaS et logiciels grand public.**
+Les fondateurs recrutent et gèrent leur équipe de clippeurs, vérifient chaque vue, bloquent les bots
+et mesurent le **coût par téléchargement (ou par inscription) de chaque clippeur**.
 Interface en français. Modèle économique : abonnement (49 / 99 / 199 €), sans commission.
+
+Spécificités « apps » :
+- **Lien intelligent par clippeur** : iPhone → App Store (campagne `clipsquad-<code>` visible dans App Store Connect),
+  Android → Play Store (`utm_content=<code>` dans la Play Console), ordinateur → site. Clics comptés par appareil.
+- **Conversions** : URL de conversion pour les SaaS web (`/api/conversion?key=…&ref=<code>&type=signup|purchase|install&id=…`)
+  et saisie manuelle des téléchargements pour les apps → coût par conversion de chaque clippeur.
+- **Consignes prêtes à l'emploi** (démo express, faceless, réaction, storytime).
+- **Preuve de propriété** : code personnel dans la description des vidéos ou compte connecté.
 
 ## Ce que fait le MVP
 

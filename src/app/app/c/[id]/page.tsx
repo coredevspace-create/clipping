@@ -13,6 +13,7 @@ import { PLATFORM_LABELS, type Platform } from "@/lib/platforms";
 import { Submit } from "@/components/submit";
 import { dailySeries } from "@/lib/series";
 import { ensureVerifyCode } from "@/lib/verify";
+import { productOf } from "@/lib/product";
 
 export default async function Page({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ erreur?: string; ok?: string }> }) {
   const { id } = await params;
@@ -20,6 +21,12 @@ export default async function Page({ params, searchParams }: { params: Promise<{
   const { user, membership, workspace } = await requireMember(id);
   const code = await ensureVerifyCode(user.id);
 
+  const [clickCount, convAgg] = await Promise.all([
+    db.linkClick.count({ where: { membershipId: membership.id, createdAt: { gte: new Date(Date.now() - 30 * 86_400_000) } } }),
+    db.conversion.aggregate({ where: { membershipId: membership.id }, _sum: { quantity: true } }),
+  ]);
+  const product = productOf(workspace.productType);
+  const hasLinks = !!(workspace.productUrl || workspace.appStoreUrl || workspace.playStoreUrl);
   const [clips, moments, payouts, team] = await Promise.all([
     db.clip.findMany({
       where: { membershipId: membership.id },
@@ -101,11 +108,20 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         </form>
       </div>
 
-      {workspace.productUrl && (
-        <div className="card">
-          <h2 className="mb-1 font-display text-lg font-bold">Ton lien traqué</h2>
-          <p className="mb-3 text-sm text-zinc-500">Mets-le en bio ou en description : le créateur voit combien de visiteurs tu lui envoies.</p>
-          <input readOnly value={trackedLink} className="input font-mono" />
+      {hasLinks && (
+        <div className="card grid gap-4 md:grid-cols-[1fr_auto] md:items-center">
+          <div>
+            <h2 className="mb-1 font-display text-lg font-bold">Ton lien de téléchargement</h2>
+            <p className="mb-3 text-sm text-zinc-500">
+              Mets-le en bio ou en commentaire épinglé. Il ouvre l&apos;App Store sur iPhone, le Play Store sur Android et le site sur ordinateur :
+              chaque {product.conversion} venant de ton lien t&apos;est attribué.
+            </p>
+            <input readOnly value={trackedLink} className="input font-mono" />
+          </div>
+          <div className="flex gap-3 md:flex-col">
+            <div className="rounded-xl bg-paper px-4 py-2"><div className="font-display text-2xl font-extrabold">{clickCount}</div><div className="text-xs text-zinc-500">clics (30 j)</div></div>
+            <div className="rounded-xl bg-lime/40 px-4 py-2"><div className="font-display text-2xl font-extrabold">{(convAgg._sum.quantity ?? 0).toLocaleString("fr-FR")}</div><div className="text-xs text-zinc-600">{product.conversions}</div></div>
+          </div>
         </div>
       )}
 

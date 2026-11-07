@@ -1,9 +1,9 @@
 /** Maquette animée du produit : des clips arrivent, l'un est détecté comme gonflé par des bots. */
 const rows = [
-  { who: "Léa", p: "TikTok", v: "17 819", e: "6,3 %", ok: true },
-  { who: "Sami", p: "TikTok", v: "51 060", e: "0,2 %", ok: false },
-  { who: "Noah", p: "Reels", v: "16 101", e: "4,9 %", ok: true },
-  { who: "Inès", p: "Shorts", v: "9 204", e: "5,8 %", ok: true },
+  { who: "Léa", p: "TikTok", v: "17 819", e: "142 DL", ok: true },
+  { who: "Sami", p: "TikTok", v: "51 060", e: "0 DL", ok: false },
+  { who: "Noah", p: "Reels", v: "16 101", e: "96 DL", ok: true },
+  { who: "Inès", p: "Shorts", v: "9 204", e: "71 DL", ok: true },
 ];
 
 export function HeroFeed() {
@@ -12,7 +12,7 @@ export function HeroFeed() {
       <div className="absolute -inset-6 -z-10 rounded-[40px] bg-lime/10 blur-2xl" />
       <div className="rotate-[1.5deg] rounded-3xl border border-paper/10 bg-ink-2 p-4 shadow-2xl shadow-black/50">
         <div className="mb-3 flex items-center justify-between px-1">
-          <span className="eyebrow text-paper/60">Clips reçus · aujourd&apos;hui</span>
+          <span className="eyebrow text-paper/60">Budgie · clips du jour</span>
           <span className="eyebrow flex items-center gap-1.5 text-coral">
             <span className="h-2 w-2 animate-blink rounded-full bg-coral" />
             live
@@ -56,8 +56,8 @@ export function HeroFeed() {
         </div>
       </div>
       <div className="absolute -bottom-6 -left-4 hidden -rotate-3 rounded-2xl bg-lime px-4 py-3 text-ink shadow-xl sm:block">
-        <div className="eyebrow">Bloqué avant paiement</div>
-        <div className="font-display text-2xl font-extrabold">− 61,27 €</div>
+        <div className="eyebrow">Coût par téléchargement</div>
+        <div className="font-display text-2xl font-extrabold">0,36 €</div>
       </div>
     </div>
   );

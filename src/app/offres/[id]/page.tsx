@@ -6,6 +6,7 @@ import { Flash } from "@/components/ui";
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { dateFr } from "@/lib/format";
+import { productOf } from "@/lib/product";
 import { Submit } from "@/components/submit";
 
 const APP_STATUS: Record<string, string> = {
@@ -45,11 +46,16 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         <p className="whitespace-pre-line text-sm text-zinc-700">{offer.description}</p>
         {offer.requirements && (
           <div>
-            <h2 className="mb-1 text-sm font-semibold">Ce qui est attendu</h2>
+            <h2 className="mb-1 text-sm font-semibold">Consignes</h2>
             <p className="whitespace-pre-line text-sm text-zinc-700">{offer.requirements}</p>
           </div>
         )}
-        {ws.productUrl && <p className="text-sm">Produit : <a href={ws.productUrl} target="_blank" rel="noreferrer" className="text-brand-700 hover:underline">{ws.productUrl}</a></p>}
+        <div className="flex flex-wrap items-center gap-2 text-sm">
+          <span className="rounded-full bg-ink px-3 py-1 font-semibold text-lime">{productOf(ws.productType).label}</span>
+          {ws.appStoreUrl && <a href={ws.appStoreUrl} target="_blank" rel="noreferrer" className="btn-ghost py-1"> App Store ↗</a>}
+          {ws.playStoreUrl && <a href={ws.playStoreUrl} target="_blank" rel="noreferrer" className="btn-ghost py-1">▶ Play Store ↗</a>}
+          {ws.productUrl && <a href={ws.productUrl} target="_blank" rel="noreferrer" className="btn-ghost py-1">Site ↗</a>}
+        </div>
         <p className="text-xs text-zinc-500">Paiement après {ws.holdDays} jours de vérification anti-fraude. Les vues achetées entraînent le refus du clip.</p>
       </div>
 

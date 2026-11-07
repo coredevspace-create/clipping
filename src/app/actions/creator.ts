@@ -7,40 +7,59 @@ import { db } from "@/lib/db";
 import { parseTimecode } from "@/lib/format";
 import { computePayouts } from "@/lib/payouts";
 import { recordStats, refreshClip } from "@/lib/tracking";
+import { CONVERSION_KINDS, PRODUCT_TYPES } from "@/lib/product";
+import { randomUUID } from "node:crypto";
 import { code, done, eurosToCents, fail, intOrNull, str } from "./util";
 
 export async function createWorkspace(fd: FormData) {
   const user = await requireUser();
   const name = str(fd, "name");
   if (name.length < 2) fail("/app/nouvelle-equipe", "Donne un nom à ton équipe.");
-  const productUrl = str(fd, "productUrl");
-  if (productUrl && !/^https?:\/\//.test(productUrl)) fail("/app/nouvelle-equipe", "L'URL du produit doit commencer par https://");
+  const links = readLinks(fd, "/app/nouvelle-equipe");
   const cpmCents = eurosToCents(str(fd, "cpm") || "1");
   if (cpmCents === null) fail("/app/nouvelle-equipe", "Rémunération invalide.");
   const ws = await db.workspace.create({
-    data: { name, ownerId: user.id, inviteCode: code(10), productUrl: productUrl || null, cpmCents },
+    data: { name, ownerId: user.id, inviteCode: code(10), cpmCents, ...links },
   });
   redirect(`/app/e/${ws.id}`);
+}
+
+/** Type de produit et liens (site, App Store, Play Store), validés. */
+function readLinks(fd: FormData, back: string) {
+  const productType = str(fd, "productType");
+  if (!(productType in PRODUCT_TYPES)) fail(back, "Type de produit invalide.");
+  const url = (k: string, host?: RegExp) => {
+    const v = str(fd, k);
+    if (!v) return null;
+    if (!/^https:\/\//.test(v)) fail(back, "Les liens doivent commencer par https://");
+    if (host && !host.test(new URL(v).hostname)) fail(back, k === "appStoreUrl" ? "Le lien App Store doit être sur apps.apple.com." : "Le lien Play Store doit être sur play.google.com.");
+    return v;
+  };
+  const productUrl = url("productUrl");
+  const appStoreUrl = url("appStoreUrl", /(^|\.)apps\.apple\.com$/);
+  const playStoreUrl = url("playStoreUrl", /(^|\.)play\.google\.com$/);
+  if (!productUrl && !appStoreUrl && !playStoreUrl) fail(back, "Renseigne au moins un lien : site, App Store ou Play Store.");
+  const pt = str(fd, "appStoreProviderToken").replace(/\D/g, "");
+  return { productType, productUrl, appStoreUrl, playStoreUrl, appStoreProviderToken: pt || null };
 }
 
 export async function updateSettings(workspaceId: string, fd: FormData) {
   await requireOwner(workspaceId);
   const back = `/app/e/${workspaceId}/reglages`;
   const name = str(fd, "name");
-  const productUrl = str(fd, "productUrl");
+  const links = readLinks(fd, back);
   const cpmCents = eurosToCents(str(fd, "cpm"));
   const maxPayoutPerClipCents = eurosToCents(str(fd, "maxPayout"));
   const minViews = intOrNull(str(fd, "minViews"));
   const holdDays = intOrNull(str(fd, "holdDays"), 0, 60);
   const fraudThreshold = intOrNull(str(fd, "fraudThreshold"), 10, 100);
   if (name.length < 2) fail(back, "Nom trop court.");
-  if (productUrl && !/^https?:\/\//.test(productUrl)) fail(back, "L'URL du produit doit commencer par https://");
   if (cpmCents === null || maxPayoutPerClipCents === null || minViews === null || holdDays === null || fraudThreshold === null) {
     fail(back, "Un des champs numériques est invalide.");
   }
   await db.workspace.update({
     where: { id: workspaceId },
-    data: { name, productUrl: productUrl || null, cpmCents, maxPayoutPerClipCents, minViews, holdDays, fraudThreshold, requireVerifiedAccounts: fd.get("requireVerifiedAccounts") === "on" },
+    data: { name, ...links, cpmCents, maxPayoutPerClipCents, minViews, holdDays, fraudThreshold, requireVerifiedAccounts: fd.get("requireVerifiedAccounts") === "on" },
   });
   done(back, "Réglages enregistrés.");
 }
@@ -215,4 +234,26 @@ export async function markPayoutPaid(workspaceId: string, payoutId: string) {
   await requireOwner(workspaceId);
   await db.payout.updateMany({ where: { id: payoutId, run: { workspaceId } }, data: { status: "PAID", paidAt: new Date() } });
   revalidatePath(`/app/e/${workspaceId}/paiements`);
+}
+
+// ——— Conversions ———
+
+/** Saisie manuelle des conversions d'un clippeur (ex. téléchargements lus dans App Store Connect / Play Console). */
+export async function addConversions(workspaceId: string, membershipId: string, fd: FormData) {
+  await requireOwner(workspaceId);
+  const back = `/app/e/${workspaceId}/clippeurs`;
+  const m = await db.membership.findFirst({ where: { id: membershipId, workspaceId } });
+  if (!m) fail(back, "Clippeur introuvable.");
+  const quantity = intOrNull(str(fd, "quantity"), 1, 1_000_000);
+  const kind = str(fd, "kind");
+  if (quantity === null) fail(back, "Nombre invalide.");
+  if (!(kind in CONVERSION_KINDS)) fail(back, "Type de conversion invalide.");
+  await db.conversion.create({ data: { workspaceId, membershipId, kind, quantity, source: "MANUAL", note: str(fd, "note").slice(0, 200) || null } });
+  done(back, `${quantity} conversion(s) ajoutée(s).`);
+}
+
+export async function regenerateConversionKey(workspaceId: string) {
+  await requireOwner(workspaceId);
+  await db.workspace.update({ where: { id: workspaceId }, data: { conversionKey: randomUUID().replace(/-/g, "") } });
+  done(`/app/e/${workspaceId}/reglages`, "Nouvelle clé générée : mets à jour ton intégration.");
 }

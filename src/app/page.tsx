@@ -7,31 +7,31 @@ import { APP_NAME, PLANS } from "@/lib/config";
 const pains = [
   {
     tc: "00:00:04",
-    t: "Les liens se noient dans Discord",
-    d: "« C'est quel clip déjà ? » Des dizaines de messages par jour, des liens en double, des vidéos supprimées. Tu passes ta soirée à remonter le fil.",
+    t: "Tu paies des vues, pas des téléchargements",
+    d: "Un clip à 100 000 vues peut ne rapporter aucun téléchargement. Sans lien propre à chaque clippeur, impossible de savoir qui fait grandir ton app et qui coûte juste de l'argent.",
   },
   {
     tc: "00:00:11",
-    t: "Tu paies des vues achetées",
-    d: "Un clip affiche 50 000 vues et seulement 100 likes ? Sans données, tu paies quand même. Quelques euros de bots suffisent pour te facturer des centaines d'euros.",
+    t: "Les bots gonflent la note",
+    d: "50 000 vues et 100 likes ? Quelques euros de bots suffisent pour te facturer des centaines d'euros. Sans données, tu paies quand même.",
   },
   {
     tc: "00:00:23",
-    t: "Le tableur du dimanche soir",
-    d: "Recopier les vues à la main, calculer le CPM, retrouver les IBAN, vérifier qui a déjà été payé. Une erreur, et c'est la dispute.",
+    t: "Des clips viraux… qui ne montrent pas ton app",
+    d: "Sans consignes claires, les clippeurs font du contenu qui buzze mais où ton produit apparaît une demi-seconde. Des vues, zéro intention de télécharger.",
   },
   {
     tc: "00:00:38",
-    t: "Trois clippeurs, le même passage",
-    d: "Ton meilleur moment de podcast est publié trois fois par trois comptes. Ils se volent les vues, et toi tu paies trois fois.",
+    t: "Discord, tableur et liens perdus",
+    d: "Les liens se noient dans les messages, les vues se recopient à la main, les IBAN se cherchent le dimanche soir. Une erreur, et c'est la dispute.",
   },
 ];
 
 const steps = [
-  { n: "01", t: "Recrute", d: "Publie ton annonce ou invite des clippeurs depuis l'annuaire. Chacun affiche ses statistiques vérifiées." },
-  { n: "02", t: "Découpe", d: "Dépose tes vidéos longues et marque les meilleurs moments. Chaque clippeur réserve le sien : zéro doublon." },
-  { n: "03", t: "Vérifie", d: "Les clippeurs collent leurs liens. Les vues sont relevées toutes les heures et chaque clip passe au détecteur de bots." },
-  { n: "04", t: "Paie", d: "Un clic calcule ce que tu dois à chacun : CPM, plafond, délai de vérification. Export des virements prêt." },
+  { n: "01", t: "Recrute", d: "Publie ta mission ou invite des clippeurs depuis l'annuaire. Chacun affiche ses vues vérifiées et sa spécialité (apps, jeux, SaaS…)." },
+  { n: "02", t: "Briefe", d: "Des consignes prêtes pour les apps : démo express, faceless, réaction, storytime. Tes clips montrent vraiment ton produit." },
+  { n: "03", t: "Vérifie", d: "Chaque vidéo est prouvée (code dans la description ou compte connecté), ses vues relevées toutes les heures et passées au détecteur de bots." },
+  { n: "04", t: "Mesure & paie", d: "Clics, téléchargements et coût par téléchargement de chaque clippeur. Un clic calcule ce que tu dois à chacun." },
 ];
 
 const signals = [
@@ -39,25 +39,26 @@ const signals = [
   ["Vues sans engagement", "Les vues montent, les likes ne bougent pas"],
   ["Taux d'engagement", "0,2 % quand un clip organique dépasse souvent 2 %"],
   ["Hors norme", "20× la médiane habituelle de ce clippeur"],
-  ["Vidéo réclamée", "Publiée 3 semaines avant d'être soumise"],
+  ["Vidéo réclamée", "Code du clippeur absent de la description"],
   ["Audience", "Contenu français vu hors francophonie (comptes connectés)"],
 ];
 
 const compare = [
-  ["Réception des clips", "Messages Discord éparpillés", "Un lien, un formulaire, zéro doublon"],
+  ["Téléchargements par clippeur", "Impossible à savoir", "Lien intelligent + coût par téléchargement"],
+  ["Réception des clips", "Messages Discord éparpillés", "Un lien, une preuve de propriété, zéro doublon"],
   ["Comptage des vues", "Captures d'écran et confiance", "Relevé automatique toutes les heures"],
   ["Vues achetées", "Impossible à voir", "Score de fraude expliqué, quarantaine"],
   ["Calcul des paiements", "Tableur à la main", "Automatique, au centime, incrémental"],
-  ["Recrutement", "Annonces perdues dans des serveurs", "Annuaire avec réputation vérifiée"],
   ["Ce que tu reverses", "—", "0 % de commission, jamais"],
 ];
 
 const faq = [
-  ["Vous prenez une commission sur ce que je verse ?", "Non. Jamais. Tu paies un abonnement fixe et tu verses à tes clippeurs ce que tu veux. Plus ton équipe grandit, plus l'écart avec une plateforme à commission se creuse."],
-  ["Quelles plateformes sont suivies ?", "YouTube Shorts, TikTok, Instagram Reels et X. Les vues YouTube sont relevées automatiquement ; TikTok et Instagram passent par la connexion du compte du clippeur (en cours de validation par ces plateformes). En attendant, tu peux saisir les stats d'un clip en quelques secondes."],
-  ["Comment détectez-vous les bots ?", "On relève les vues de chaque clip toutes les heures pendant 3 jours puis deux fois par jour. On analyse la forme de la courbe, l'engagement, l'historique du clippeur et la date de publication. Chaque clip suspect est expliqué : c'est toi qui tranches."],
-  ["Est-ce que je paie mes clippeurs via vous ?", "Pas pour l'instant : on calcule tout et on prépare l'export des virements (IBAN, PayPal). Tu gardes la main sur ton argent."],
-  ["Je suis clippeur, c'est payant ?", "Non, c'est gratuit pour les clippeurs. Crée ton annonce, postule aux missions et construis une réputation vérifiée qui te suit d'équipe en équipe."],
+  ["C'est fait pour quel type de produit ?", "Pour les logiciels grand public : apps mobiles (iOS, Android), jeux, SaaS et sites web, logiciels, extensions de navigateur. Tout produit numérique qui se vend à des particuliers et qui grandit grâce aux vidéos courtes."],
+  ["Comment savoir combien de téléchargements apporte chaque clippeur ?", "Chaque clippeur a un lien intelligent : iPhone → App Store, Android → Play Store, ordinateur → ton site. Les clics sont comptés par appareil, et chaque clippeur apparaît comme une campagne dans App Store Connect et la Play Console. Pour un SaaS web, les inscriptions remontent automatiquement par une simple URL à appeler. Résultat : le coût par téléchargement ou par inscription de chaque clippeur."],
+  ["Un clippeur peut-il envoyer la vidéo de quelqu'un d'autre ?", "Non. Chaque clippeur a un code personnel à mettre dans la description de sa vidéo, ou connecte son compte. Sans preuve, le clip est refusé."],
+  ["Vous prenez une commission sur ce que je verse ?", "Non. Jamais. Tu paies un abonnement fixe et tu verses à tes clippeurs ce que tu veux."],
+  ["Quelles plateformes sont suivies ?", "TikTok, Instagram Reels, YouTube Shorts et X. Les vues sont relevées automatiquement, toutes les heures les 3 premiers jours."],
+  ["Je suis clippeur, c'est payant ?", "Non, c'est gratuit. Trouve des missions d'apps qui paient à la vue, et construis une réputation vérifiée qui te suit d'équipe en équipe."],
 ];
 
 export default async function Home() {
@@ -72,16 +73,20 @@ export default async function Home() {
         <div className="relative mx-auto grid max-w-6xl items-center gap-14 px-4 pb-24 pt-16 lg:grid-cols-[1.15fr_1fr] lg:pt-24">
           <div>
             <div className="eyebrow reveal flex items-center gap-2 text-paper/70">
-              <span className="h-2 w-2 animate-blink rounded-full bg-coral" /> Pour les fondateurs qui font clipper leur produit
+              <span className="h-2 w-2 animate-blink rounded-full bg-coral" /> Le clipping pour les apps, SaaS et logiciels grand public
             </div>
-            <h1 className="reveal mt-6 font-display text-[44px] font-extrabold leading-[0.95] tracking-[-0.035em] sm:text-7xl" style={{ animationDelay: ".1s" }}>
-              Tes clippeurs font des vues.
+            <h1 className="reveal mt-6 font-display text-[38px] font-extrabold leading-[0.95] tracking-[-0.035em] sm:text-6xl xl:text-[68px]" style={{ animationDelay: ".1s" }}>
+              Des vues qui
               <br />
-              <span className="serif text-lime">Les bots aussi.</span>
+              deviennent des
+              <br />
+              <span className="whitespace-nowrap">téléchargements.</span>
+              <br />
+              <span className="serif text-lime">Pas des bots.</span>
             </h1>
             <p className="reveal mt-6 max-w-xl text-lg text-paper/75" style={{ animationDelay: ".2s" }}>
-              {APP_NAME} reçoit les clips de ton équipe, relève chaque vue, repère celles qui sont achetées et calcule ce que tu dois à chacun.
-              Fini Discord, fini le tableur, fini de payer pour du vent.
+              {APP_NAME} est l&apos;outil des fondateurs qui font connaître leur app avec une équipe de clippeurs : recrutement, consignes,
+              vues vérifiées, anti-bots, et le coût par téléchargement de chaque clippeur. Fini Discord, fini le tableur, fini de payer pour du vent.
             </p>
             <div className="reveal mt-9 flex flex-wrap items-center gap-3" style={{ animationDelay: ".3s" }}>
               <Link href={startHref} className="btn-lime text-base">Créer mon équipe gratuitement →</Link>
@@ -103,7 +108,7 @@ export default async function Home() {
         <div className="relative overflow-hidden border-t border-paper/10 py-3">
           <div className="flex w-max animate-marquee gap-10 whitespace-nowrap font-mono text-xs text-paper/40">
             {Array.from({ length: 2 }).flatMap((_, k) =>
-              ["TikTok", "YouTube Shorts", "Instagram Reels", "X", "Podcasts", "Lives", "Démos produit", "Interviews"].map((w, i) => (
+              ["Apps mobiles", "TikTok", "Jeux", "Instagram Reels", "SaaS", "YouTube Shorts", "Extensions", "Logiciels"].map((w, i) => (
                 <span key={`${k}-${i}`} className="flex items-center gap-10">
                   <span>{`00:0${i}:${String(i * 7 + 3).padStart(2, "0")}`}</span>
                   <span className="text-paper/70">{w}</span>
@@ -125,7 +130,8 @@ export default async function Home() {
             <span className="serif">Le gérer, c&apos;est l&apos;enfer.</span>
           </h2>
           <p className="mt-5 text-lg text-zinc-600">
-            Une armée de clippeurs, c&apos;est la façon la moins chère de faire connaître ton produit. Jusqu&apos;au moment où il faut les suivre et les payer.
+            Pour une app grand public, une armée de clippeurs sur TikTok est le canal d&apos;acquisition le moins cher qui existe. Jusqu&apos;au moment où il faut savoir
+            lesquels ramènent vraiment des téléchargements.
           </p>
         </div>
         <div className="mt-14 grid gap-px overflow-hidden rounded-3xl border border-ink/10 bg-ink/10 md:grid-cols-2">
@@ -151,7 +157,7 @@ export default async function Home() {
               Combien te coûtent <span className="serif">les fausses vues</span> ?
             </h2>
           </div>
-          <p className="max-w-sm text-zinc-600">Chaque vue de bot que tu paies, c&apos;est de l&apos;argent qui ne fait pas connaître ton produit.</p>
+          <p className="max-w-sm text-zinc-600">Chaque vue de bot que tu paies, c&apos;est un téléchargement que tu n&apos;auras jamais.</p>
         </div>
         <Calculator />
       </section>
@@ -162,7 +168,7 @@ export default async function Home() {
           <div className="max-w-3xl">
             <div className="eyebrow text-brand-700">La solution</div>
             <h2 className="mt-3 font-display text-4xl font-extrabold leading-[1.02] tracking-[-0.03em] sm:text-6xl">
-              De l&apos;annonce au virement,
+              De la mission au téléchargement,
               <br />
               <span className="serif">sur une seule timeline.</span>
             </h2>
@@ -178,6 +184,71 @@ export default async function Home() {
                 <p className="mt-2 text-sm text-zinc-600">{s.d}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ——— PENSÉ POUR LES APPS ——— */}
+      <section className="py-24">
+        <div className="max-w-3xl">
+          <div className="eyebrow text-zinc-500">Pensé pour les apps</div>
+          <h2 className="mt-3 font-display text-4xl font-extrabold leading-[1.02] tracking-[-0.03em] sm:text-6xl">
+            Tu sais enfin <span className="serif">qui te rapporte des téléchargements.</span>
+          </h2>
+        </div>
+        <div className="mt-12 grid gap-5 lg:grid-cols-2">
+          <div className="rounded-[28px] border border-ink/10 bg-white p-8">
+            <div className="eyebrow text-zinc-500">Lien intelligent par clippeur</div>
+            <h3 className="mt-3 font-display text-2xl font-bold">Un seul lien en bio, le bon store à chaque fois.</h3>
+            <div className="mt-6 space-y-2 font-mono text-sm">
+              {[
+                ["📱", "iPhone", "App Store", "campagne clipsquad-lea"],
+                ["🤖", "Android", "Play Store", "utm_content=lea"],
+                ["💻", "Ordinateur", "ton site", "utm_content=lea"],
+              ].map(([i, d, to, tag]) => (
+                <div key={d} className="flex items-center justify-between gap-3 rounded-xl bg-paper px-4 py-3">
+                  <span className="flex items-center gap-2"><span>{i}</span>{d}</span>
+                  <span className="text-zinc-400">→</span>
+                  <span className="font-semibold">{to}</span>
+                  <span className="hidden text-xs text-zinc-500 sm:inline">{tag}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="rounded-[28px] bg-ink p-8 text-paper">
+            <div className="eyebrow text-lime">Coût par téléchargement</div>
+            <h3 className="mt-3 font-display text-2xl font-bold">Garde les clippeurs rentables. Remplace les autres.</h3>
+            <div className="mt-6 overflow-hidden rounded-xl border border-paper/10 text-sm">
+              {[
+                ["Léa", "212 k", "640", "0,33 €"],
+                ["Noah", "94 k", "210", "0,45 €"],
+                ["Sami", "151 k", "38", "3,97 €"],
+              ].map(([n, v, dl, c], i) => (
+                <div key={n} className={`grid grid-cols-4 gap-2 px-4 py-3 ${i ? "border-t border-paper/10" : ""}`}>
+                  <span className="font-semibold">{n}</span>
+                  <span className="font-mono text-paper/70">{v} vues</span>
+                  <span className="font-mono text-paper/70">{dl} DL</span>
+                  <span className={`text-right font-mono font-semibold ${i === 2 ? "text-coral" : "text-lime"}`}>{c}</span>
+                </div>
+              ))}
+            </div>
+            <p className="mt-3 text-xs text-paper/50">Exemple illustratif.</p>
+          </div>
+          <div className="rounded-[28px] border border-ink/10 bg-white p-8">
+            <div className="eyebrow text-zinc-500">Consignes prêtes à l&apos;emploi</div>
+            <h3 className="mt-3 font-display text-2xl font-bold">Des clips qui montrent vraiment ton app.</h3>
+            <div className="mt-5 flex flex-wrap gap-2">
+              {["Démo express", "Faceless", "Réaction / avis", "Storytime"].map((t) => (
+                <span key={t} className="rounded-full border border-ink/15 px-3 py-1.5 text-sm font-medium">{t}</span>
+              ))}
+            </div>
+            <p className="mt-4 text-sm text-zinc-600">Hook en 2 secondes, nom de l&apos;app à l&apos;écran, « lien en bio » : les règles qui transforment une vue en téléchargement, en un clic dans ta mission.</p>
+          </div>
+          <div className="rounded-[28px] border border-ink/10 bg-lime p-8">
+            <div className="eyebrow">Preuve de propriété</div>
+            <h3 className="mt-3 font-display text-2xl font-bold">Personne ne peut réclamer la vidéo d&apos;un autre.</h3>
+            <div className="mt-5 inline-flex items-center gap-3 rounded-xl bg-ink px-4 py-2.5 font-mono text-lg font-bold text-lime">#cs7k2p</div>
+            <p className="mt-4 text-sm text-ink/75">Chaque clippeur met son code dans la description, ou connecte son compte TikTok, Instagram ou YouTube. Sans preuve, pas de clip.</p>
           </div>
         </div>
       </section>
@@ -235,9 +306,9 @@ export default async function Home() {
           <div className="flex flex-col justify-between rounded-[28px] bg-lime p-8 text-ink sm:p-10">
             <div>
               <div className="eyebrow">Tu es clippeur</div>
-              <h3 className="mt-4 font-display text-3xl font-bold tracking-tight">Trouve des missions payées à la vue.</h3>
+              <h3 className="mt-4 font-display text-3xl font-bold tracking-tight">Des apps te paient à la vue.</h3>
               <p className="mt-3 text-ink/75">
-                Des fondateurs qui lancent leur produit cherchent des clippeurs. Postule en deux clics, suis tes vues et tes gains en temps réel, et construis
+                Des apps, jeux et SaaS qui se lancent cherchent des clippeurs. Postule en deux clics, suis tes vues et tes gains en temps réel, et construis
                 une réputation vérifiée qui te suit d&apos;équipe en équipe. Gratuit, pour toujours.
               </p>
             </div>
@@ -280,7 +351,7 @@ export default async function Home() {
             </h2>
           </div>
           <p className="max-w-sm text-zinc-600">
-            Exemple : tu verses 3 000 € par mois à tes clippeurs. Une plateforme qui prend 20 % te coûte 600 € par mois. Ici, 99 €.
+            Exemple : tu verses 3 000 € par mois à tes clippeurs pour lancer ton app. Une plateforme qui prend 20 % te coûte 600 € par mois. Ici, 99 €.
           </p>
         </div>
         <div className="mt-12 grid gap-5 md:grid-cols-3">
@@ -329,9 +400,9 @@ export default async function Home() {
         <div className="grid-lines absolute inset-0" />
         <div className="relative mx-auto max-w-6xl px-4 py-24 text-center">
           <h2 className="mx-auto max-w-4xl font-display text-4xl font-extrabold leading-[1] tracking-[-0.035em] sm:text-7xl">
-            Ton prochain clip viral
+            Ton app mérite
             <br />
-            <span className="serif text-lime">mérite mieux qu&apos;un tableur.</span>
+            <span className="serif text-lime">mieux qu&apos;un tableur.</span>
           </h2>
           <div className="mt-10 flex flex-wrap justify-center gap-3">
             <Link href={startHref} className="btn-lime text-base">Créer mon équipe gratuitement →</Link>

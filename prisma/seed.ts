@@ -31,7 +31,11 @@ async function main() {
   const passwordHash = await bcrypt.hash("demo1234", 10);
   const owner = await db.user.create({ data: { email: "demo@clipsquad.fr", name: "Julie (fondatrice)", passwordHash, role: "CREATOR" } });
   const ws = await db.workspace.create({
-    data: { name: "Facturo — SaaS de facturation", ownerId: owner.id, inviteCode: "demo-invite", productUrl: "https://example.com", cpmCents: 120, minViews: 1000, maxPayoutPerClipCents: 8000 },
+    data: {
+      name: "Budgie — l'app de budget", ownerId: owner.id, inviteCode: "demo-invite", productType: "APP",
+      productUrl: "https://example.com", appStoreUrl: "https://apps.apple.com/fr/app/budgie/id0000000000", playStoreUrl: "https://play.google.com/store/apps/details?id=app.budgie.demo",
+      cpmCents: 120, minViews: 1000, maxPayoutPerClipCents: 8000,
+    },
   });
 
   const names = [["lea", "Léa"], ["sami", "Sami"], ["noah", "Noah"]];
@@ -42,14 +46,14 @@ async function main() {
   }
 
   const src = await db.source.create({
-    data: { workspaceId: ws.id, title: "Live : comment on est passé de 0 à 10 k€ MRR", url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", notes: "Format vertical, sous-titres obligatoires, mentionner Facturo dans la description." },
+    data: { workspaceId: ws.id, title: "Démo complète de l'app (écran enregistré)", url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", notes: "Montre l'app à l'écran, sous-titres obligatoires, « lien en bio » à la fin." },
   });
   const moments = await Promise.all(
     [
-      [312, 371, "Le premier client trouvé sur LinkedIn"],
-      [1225, 1290, "Pourquoi on a doublé nos prix"],
-      [2040, 2101, "L'erreur qui nous a coûté 3 mois"],
-      [2900, 2960, "Le tableau de bord en démo"],
+      [12, 41, "Créer son premier budget en 20 secondes"],
+      [95, 130, "L'alerte « tu vas dépasser » en action"],
+      [180, 214, "Le défi 30 jours sans dépense inutile"],
+      [260, 290, "Le graphique des abonnements oubliés"],
     ].map(([s, e, t]) => db.moment.create({ data: { sourceId: src.id, startSec: s as number, endSec: e as number, title: t as string } })),
   );
   await db.moment.update({ where: { id: moments[0].id }, data: { reservedById: members[0].id, reservedAt: new Date() } });
@@ -87,7 +91,7 @@ async function main() {
   await db.message.createMany({
     data: [
       { workspaceId: ws.id, userId: owner.id, channel: "annonces", body: "Bienvenue dans l'équipe ! Nouveau live jeudi 20 h : les moments à clipper seront dans l'onglet « Moments à clipper » vendredi matin.", createdAt: ago(60 * 26) },
-      { workspaceId: ws.id, userId: owner.id, channel: "annonces", body: "Rappel : sous-titres obligatoires et mention de Facturo dans la description. Les clips avec des vues achetées sont refusés.", createdAt: ago(60 * 3) },
+      { workspaceId: ws.id, userId: owner.id, channel: "annonces", body: "Rappel : sous-titres obligatoires et mention de Budgie dans la description. Les clips avec des vues achetées sont refusés.", createdAt: ago(60 * 3) },
       { workspaceId: ws.id, userId: lea.userId, channel: "general", body: "Hello tout le monde 👋 mon clip sur le premier client LinkedIn vient de passer les 15k vues !", createdAt: ago(95) },
       { workspaceId: ws.id, userId: owner.id, channel: "general", body: "Bravo Léa 🔥 le hook des 2 premières secondes est parfait.", createdAt: ago(90) },
       { workspaceId: ws.id, userId: sami.userId, channel: "entraide", body: "Vous utilisez quoi pour les sous-titres animés ? Je cherche un truc rapide.", createdAt: ago(40) },
@@ -95,32 +99,47 @@ async function main() {
     ],
   });
 
+  // ——— Clics par appareil et téléchargements attribués ———
+  const devices = ["IOS", "IOS", "IOS", "ANDROID", "ANDROID", "DESKTOP"];
+  for (const [i, m] of members.entries()) {
+    const n = [180, 95, 120][i];
+    await db.linkClick.createMany({ data: Array.from({ length: n }, (_, k) => ({ membershipId: m.id, visitorHash: `demo-${i}-${k}`, device: devices[k % devices.length], createdAt: new Date(now - (k % 14) * 86_400_000) })) });
+  }
+  await db.conversion.createMany({
+    data: [
+      { workspaceId: ws.id, membershipId: members[0].id, kind: "INSTALL", quantity: 132, source: "MANUAL", note: "App Store Connect" },
+      { workspaceId: ws.id, membershipId: members[0].id, kind: "INSTALL", quantity: 41, source: "MANUAL", note: "Play Console" },
+      { workspaceId: ws.id, membershipId: members[1].id, kind: "INSTALL", quantity: 9, source: "MANUAL", note: "App Store Connect" },
+      { workspaceId: ws.id, membershipId: members[2].id, kind: "INSTALL", quantity: 88, source: "MANUAL", note: "App Store Connect" },
+    ],
+  });
+
   // ——— Place de marché ———
   await db.offer.create({
     data: {
-      workspaceId: ws.id, niche: "SaaS / Tech", platforms: "TIKTOK,YOUTUBE,INSTAGRAM",
-      title: "Clippeurs recherchés pour un SaaS de facturation",
-      description: "Facturo aide les freelances à facturer en 30 secondes. On fait un live par semaine sur la croissance du produit : on cherche des clippeurs pour en tirer des shorts percutants.",
-      requirements: "Format 9:16, sous-titres, mention de Facturo dans la description. 3 clips par semaine minimum.",
+      workspaceId: ws.id, niche: "Finance / budget", platforms: "TIKTOK,YOUTUBE,INSTAGRAM",
+      title: "Fais découvrir Budgie aux 18-30 ans",
+      description: "Budgie est une app de budget pour les étudiants et jeunes actifs : on voit où part son argent en 2 minutes par jour. On cherche des clippeurs TikTok / Reels pour des démos et des storytimes « fin de mois ».",
+      requirements: "Format « démo express » : le problème en une phrase, l'écran clé de l'app, le résultat avant / après.\n\n• Format vertical 9:16, 15 à 45 secondes, sous-titres\n• Nom de l'app visible + « lien en bio »\n• Ton code de vérification dans la description",
     },
   });
   const extra = [
-    { slug: "marc", name: "Marc (Lumo AI)", ws: "Lumo — assistant IA pour avocats", niche: "IA", cpm: 150, title: "Shorts sur l'IA appliquée au droit", desc: "Lumo résume des contrats en 10 secondes. Podcast hebdo avec des avocats : on veut des clips pédagogiques et punchy.", pf: "TIKTOK,YOUTUBE" },
-    { slug: "sarah", name: "Sarah (Stackly)", ws: "Stackly — no-code pour e-learning", niche: "Formation / E-learning", cpm: 100, title: "Clips pour une plateforme de formation no-code", desc: "On lance Stackly en France. Des dizaines d'heures de masterclass à découper pour TikTok et Reels.", pf: "TIKTOK,INSTAGRAM" },
+    { slug: "marc", name: "Marc (Lingo)", ws: "Lingo — apprends l'anglais en 5 min/jour", type: "APP", niche: "Éducation / langues", cpm: 150, title: "Clips « j'ai appris l'anglais avec mon téléphone »", desc: "Lingo est une app d'anglais par mini-défis quotidiens. On cherche des clippeurs pour des formats faceless et réaction.", pf: "TIKTOK,YOUTUBE" },
+    { slug: "sarah", name: "Sarah (Snapcut)", ws: "Snapcut — le montage vidéo par IA", type: "WEB", niche: "IA grand public", cpm: 100, title: "Montre la magie de Snapcut en 15 secondes", desc: "Snapcut monte automatiquement tes vidéos de vacances. On lance en France : démos avant / après très visuelles.", pf: "TIKTOK,INSTAGRAM" },
   ];
   for (const e of extra) {
     const u = await db.user.create({ data: { email: `${e.slug}@clipsquad.fr`, name: e.name, passwordHash, role: "CREATOR" } });
-    const w = await db.workspace.create({ data: { name: e.ws, ownerId: u.id, inviteCode: `demo-${e.slug}`, cpmCents: e.cpm, minViews: 2000, maxPayoutPerClipCents: 12000 } });
+    const w = await db.workspace.create({ data: { name: e.ws, ownerId: u.id, inviteCode: `demo-${e.slug}`, productType: e.type, productUrl: "https://example.com", cpmCents: e.cpm, minViews: 2000, maxPayoutPerClipCents: 12000 } });
     await db.offer.create({ data: { workspaceId: w.id, niche: e.niche, platforms: e.pf, title: e.title, description: e.desc } });
   }
   const profiles = [
-    { userId: (await db.user.findUniqueOrThrow({ where: { email: "lea@clipsquad.fr" } })).id, headline: "Monteuse shorts SaaS & business, sous-titres soignés", bio: "2 ans à clipper des podcasts business. Je gère 3 comptes TikTok dans la niche entrepreneuriat. Mon point fort : les hooks des 2 premières secondes.", niches: "SaaS / Tech,Business / Entrepreneuriat", platforms: "TIKTOK,INSTAGRAM", contact: "discord : lea.clips" },
-    { userId: (await db.user.findUniqueOrThrow({ where: { email: "noah@clipsquad.fr" } })).id, headline: "Clips IA & productivité, 1 compte à 40k abonnés", bio: "Je publie chaque jour des shorts sur l'IA et la productivité. J'aime les produits techniques que je peux expliquer simplement.", niches: "IA,Productivité", platforms: "YOUTUBE,TIKTOK", contact: "telegram : @noahcuts" },
+    { userId: (await db.user.findUniqueOrThrow({ where: { email: "lea@clipsquad.fr" } })).id, headline: "Démos d'apps qui convertissent, sous-titres soignés", bio: "2 ans à faire des démos d'apps sur TikTok. Je gère 3 comptes « astuces téléphone ». Mon point fort : les hooks des 2 premières secondes.", niches: "App mobile,Finance / budget", platforms: "TIKTOK,INSTAGRAM", contact: "discord : lea.clips" },
+    { userId: (await db.user.findUniqueOrThrow({ where: { email: "noah@clipsquad.fr" } })).id, headline: "Faceless IA & productivité, 1 compte à 40k abonnés", bio: "Je publie chaque jour des shorts « 3 apps qui vont te changer la vie ». J'aime les produits que je peux montrer en 15 secondes.", niches: "IA grand public,Productivité", platforms: "YOUTUBE,TIKTOK", contact: "telegram : @noahcuts" },
   ];
   for (const p of profiles) await db.clipperProfile.create({ data: p });
   for (const [slug, name, headline, niches, pf] of [
-    ["yanis", "Yanis", "Monteur Reels pour coachs et formateurs", "Coaching,Formation / E-learning", "INSTAGRAM,TIKTOK"],
-    ["chloe", "Chloé", "Clippeuse podcast, style documentaire", "Podcast / Interview,Business / Entrepreneuriat", "YOUTUBE,TIKTOK,INSTAGRAM"],
+    ["yanis", "Yanis", "Jeux mobiles : gameplay, réactions, fails", "Jeu mobile,App mobile", "TIKTOK,YOUTUBE"],
+    ["chloe", "Chloé", "Storytimes et avant / après pour apps et SaaS", "SaaS web,Santé / sport", "YOUTUBE,TIKTOK,INSTAGRAM"],
   ]) {
     const u = await db.user.create({ data: { email: `${slug}@clipsquad.fr`, name, passwordHash, role: "CLIPPER" } });
     await db.clipperProfile.create({ data: { userId: u.id, headline, bio: "Disponible pour de nouvelles équipes. Je livre 5 à 10 clips par semaine, sous-titrés, avec des hooks testés.", niches, platforms: pf } });

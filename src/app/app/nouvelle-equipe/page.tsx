@@ -1,5 +1,6 @@
 import { createWorkspace } from "@/app/actions/creator";
 import { Flash, PageTitle } from "@/components/ui";
+import { ProductFields } from "@/components/product-fields";
 import { requireUser } from "@/lib/auth";
 import { Submit } from "@/components/submit";
 
@@ -8,14 +9,11 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ e
   const sp = await searchParams;
   return (
     <div className="mx-auto max-w-lg">
-      <PageTitle title="Nouvelle équipe" subtitle="Une équipe = un produit que tes clippeurs vont promouvoir." />
+      <PageTitle title="Nouvelle équipe" subtitle="Une équipe = une app ou un logiciel que tes clippeurs vont faire connaître." />
       <Flash sp={sp} />
       <form action={createWorkspace} className="card space-y-4">
-        <div><label className="label">Nom du produit</label><input name="name" required placeholder="Ex. MonSaaS" className="input" /></div>
-        <div>
-          <label className="label">URL du produit (pour les liens traqués)</label>
-          <input name="productUrl" type="url" placeholder="https://monsaas.fr" className="input" />
-        </div>
+        <div><label className="label">Nom du produit</label><input name="name" required placeholder="Ex. Budgie — l'app de budget" className="input" /></div>
+        <ProductFields />
         <div>
           <label className="label">Rémunération pour 1 000 vues (€)</label>
           <input name="cpm" defaultValue="1" inputMode="decimal" className="input" />
