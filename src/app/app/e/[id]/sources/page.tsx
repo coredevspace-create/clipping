@@ -18,7 +18,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
     <div className="space-y-6">
       <Flash sp={sp} />
       <div className="card">
-        <h3 className="font-semibold">Ajouter une vidéo source</h3>
+        <h3 className="font-display text-lg font-bold">Ajouter une vidéo source</h3>
         <p className="mb-3 text-sm text-zinc-500">Live, podcast, démo produit, interview… Puis découpe les meilleurs moments : chaque clippeur en réserve un, personne ne publie le même clip.</p>
         <form action={createSource.bind(null, id)} className="grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
           <input name="title" required placeholder="Titre (ex. Live lancement v2)" className="input" />
@@ -34,7 +34,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         <div key={s.id} className="card">
           <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
             <div>
-              <h3 className="font-semibold">{s.title}</h3>
+              <h3 className="font-display text-lg font-bold">{s.title}</h3>
               <a href={s.url} target="_blank" rel="noreferrer" className="break-all text-sm text-brand-700 hover:underline">{s.url}</a>
               {s.notes && <p className="mt-1 text-sm text-zinc-600">{s.notes}</p>}
               <p className="text-xs text-zinc-400">Ajoutée le {dateFr(s.createdAt)}</p>
@@ -52,7 +52,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
                     <td>{m.title}{m.notes && <div className="text-xs text-zinc-500">{m.notes}</div>}</td>
                     <td>
                       {m.reservedBy ? (
-                        <span>{m.reservedBy.user.name}{m.clips.length > 0 && <span className="ml-1 text-xs text-emerald-700">· publié</span>}</span>
+                        <span>{m.reservedBy.user.name}{m.clips.length > 0 && <span className="ml-1 text-xs text-brand-700">· publié</span>}</span>
                       ) : (
                         <span className="text-zinc-400">Libre</span>
                       )}

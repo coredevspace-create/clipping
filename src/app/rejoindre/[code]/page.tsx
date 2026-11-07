@@ -20,7 +20,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
       <Flash sp={sp} />
       <div className="card space-y-4 text-center">
         <p className="text-sm text-zinc-500">{ws.owner.name} t&apos;invite à clipper pour</p>
-        <h1 className="text-2xl font-bold">{ws.name}</h1>
+        <h1 className="font-display text-3xl font-extrabold tracking-[-0.03em]">{ws.name}</h1>
         <div className="grid grid-cols-3 gap-2 text-sm">
           <div className="rounded-lg bg-zinc-50 p-2"><div className="font-bold">{euros(ws.cpmCents)}</div><div className="text-xs text-zinc-500">/ 1 000 vues</div></div>
           <div className="rounded-lg bg-zinc-50 p-2"><div className="font-bold">{num(ws.minViews)}</div><div className="text-xs text-zinc-500">vues min.</div></div>

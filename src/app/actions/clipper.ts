@@ -2,27 +2,19 @@
 
 import { redirect } from "next/navigation";
 import { requireMember, requireUser } from "@/lib/auth";
-import { planOf } from "@/lib/config";
 import { db } from "@/lib/db";
+import { addMember } from "@/lib/marketplace";
 import { parseClipUrl } from "@/lib/platforms";
 import { refreshClip } from "@/lib/tracking";
-import { code, done, fail, str } from "./util";
+import { done, fail, str } from "./util";
 
 export async function joinWorkspace(inviteCode: string) {
   const user = await requireUser();
   const ws = await db.workspace.findUnique({ where: { inviteCode } });
   if (!ws) fail(`/rejoindre/${inviteCode}`, "Invitation invalide ou expirée.");
   if (ws.ownerId === user.id) redirect(`/app/e/${ws.id}`);
-
-  const existing = await db.membership.findUnique({ where: { workspaceId_userId: { workspaceId: ws.id, userId: user.id } } });
-  if (existing?.status === "REMOVED") fail(`/rejoindre/${inviteCode}`, "Tu as été retiré de cette équipe.");
-  if (!existing) {
-    const count = await db.membership.count({ where: { workspaceId: ws.id, status: "ACTIVE" } });
-    if (count >= planOf(ws.plan).maxClippers) {
-      fail(`/rejoindre/${inviteCode}`, "Cette équipe a atteint la limite de clippeurs de son abonnement.");
-    }
-    await db.membership.create({ data: { workspaceId: ws.id, userId: user.id, trackingCode: code(8) } });
-  }
+  const error = await addMember(ws.id, user.id);
+  if (error) fail(`/rejoindre/${inviteCode}`, error);
   redirect(`/app/c/${ws.id}`);
 }
 

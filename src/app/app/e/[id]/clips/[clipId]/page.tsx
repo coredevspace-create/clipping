@@ -26,7 +26,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <Link href={`/app/e/${id}`} className="text-sm text-zinc-500 hover:underline">← Tous les clips</Link>
-          <h2 className="mt-1 text-xl font-bold">{PLATFORM_LABELS[clip.platform as Platform]} · {clip.membership.user.name}</h2>
+          <h2 className="mt-1 font-display text-2xl font-extrabold tracking-tight">{PLATFORM_LABELS[clip.platform as Platform]} · {clip.membership.user.name}</h2>
           <a href={clip.url} target="_blank" rel="noreferrer" className="break-all text-sm text-brand-700 hover:underline">{clip.url}</a>
           {clip.moment && (
             <p className="mt-1 text-sm text-zinc-500">
@@ -52,7 +52,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="card lg:col-span-2">
           <div className="mb-3 flex items-center justify-between">
-            <h3 className="font-semibold">Courbe des vues</h3>
+            <h3 className="font-display text-lg font-bold">Courbe des vues</h3>
             <form action={refreshOneClip.bind(null, id, clip.id)}><button className="btn-ghost">↻ Actualiser</button></form>
           </div>
           <ViewsChart points={clip.snapshots.map((s) => ({ t: s.capturedAt.getTime(), v: s.views }))} />
@@ -61,15 +61,15 @@ export default async function Page({ params, searchParams }: { params: Promise<{
 
         <div className="card">
           <div className="mb-3 flex items-center justify-between">
-            <h3 className="font-semibold">Anti-fraude</h3>
+            <h3 className="font-display text-lg font-bold">Anti-fraude</h3>
             <FraudBadge score={clip.fraudScore} threshold={workspace.fraudThreshold} />
           </div>
           {reasons.length === 0 ? (
-            <p className="text-sm text-emerald-700">Aucun signal suspect détecté.</p>
+            <p className="text-sm text-brand-700">Aucun signal suspect détecté.</p>
           ) : (
             <ul className="space-y-2 text-sm">
               {reasons.map((r) => (
-                <li key={r.code} className="rounded-lg bg-red-50 p-2 text-red-900">
+                <li key={r.code} className="rounded-lg bg-coral/10 p-2 text-ink">
                   <span className="font-mono text-xs font-semibold">+{r.points}</span> {r.label}
                 </li>
               ))}
@@ -81,7 +81,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
       </div>
 
       <div className="card">
-        <h3 className="mb-1 font-semibold">Saisie manuelle des statistiques</h3>
+        <h3 className="mb-1 font-display text-lg font-bold">Saisie manuelle des statistiques</h3>
         <p className="mb-3 text-sm text-zinc-500">Pour les plateformes pas encore branchées : recopie les chiffres affichés sur la vidéo ou une capture envoyée par le clippeur.</p>
         <form action={manualStats.bind(null, id, clip.id)} className="grid gap-3 sm:grid-cols-5">
           <input name="views" required placeholder="Vues" inputMode="numeric" className="input" />

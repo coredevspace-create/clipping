@@ -29,8 +29,8 @@ export function parseTimecode(input: string): number | null {
 }
 
 export const STATUS_LABELS: Record<string, { label: string; tone: string }> = {
-  PENDING: { label: "En vérification", tone: "bg-amber-100 text-amber-800" },
-  FLAGGED: { label: "Suspect", tone: "bg-red-100 text-red-800" },
-  APPROVED: { label: "Validé", tone: "bg-emerald-100 text-emerald-800" },
-  REJECTED: { label: "Refusé", tone: "bg-zinc-200 text-zinc-700" },
+  PENDING: { label: "En vérification", tone: "bg-paper-2 text-zinc-700 ring-1 ring-ink/10" },
+  FLAGGED: { label: "Suspect", tone: "bg-coral text-white" },
+  APPROVED: { label: "Validé", tone: "bg-lime text-ink" },
+  REJECTED: { label: "Refusé", tone: "bg-zinc-200 text-zinc-600 line-through" },
 };

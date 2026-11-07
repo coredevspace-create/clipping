@@ -21,10 +21,12 @@ export async function signup(fd: FormData) {
   if (!parsed.success) fail(back, parsed.error.issues[0].message);
 
   const { name, email, password } = parsed.data;
+  const role = str(fd, "role") === "CLIPPER" ? "CLIPPER" : "CREATOR";
   if (await db.user.findUnique({ where: { email } })) fail(back, "Un compte existe déjà avec cet email. Connecte-toi.");
-  const user = await db.user.create({ data: { name, email, passwordHash: await hashPassword(password) } });
+  const user = await db.user.create({ data: { name, email, role, passwordHash: await hashPassword(password) } });
   await createSession(user.id);
-  redirect(next);
+  // un nouveau clippeur commence par créer son annonce, sauf s'il venait d'un lien précis
+  redirect(role === "CLIPPER" && next === "/app" ? "/app/profil?bienvenue=1" : next);
 }
 
 export async function login(fd: FormData) {

@@ -32,8 +32,8 @@ export default async function Page({ params, searchParams }: { params: Promise<{
   return (
     <div className="space-y-8">
       <div>
-        <div className="text-sm text-zinc-500">Espace clippeur</div>
-        <h1 className="text-3xl font-bold tracking-tight">{workspace.name}</h1>
+        <div className="eyebrow text-zinc-500">Espace clippeur</div>
+        <h1 className="mt-2 font-display text-4xl font-extrabold tracking-[-0.03em] sm:text-5xl">{workspace.name}</h1>
         <p className="mt-1 text-sm text-zinc-500">
           {euros(workspace.cpmCents)} / 1 000 vues · à partir de {num(workspace.minViews)} vues · max {euros(workspace.maxPayoutPerClipCents)} par clip · validation sous {workspace.holdDays} j
         </p>
@@ -47,7 +47,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
       </div>
 
       <div className="card">
-        <h2 className="mb-1 font-semibold">Envoyer un clip</h2>
+        <h2 className="mb-1 font-display text-lg font-bold">Envoyer un clip</h2>
         <p className="mb-3 text-sm text-zinc-500">Publie ton clip, puis colle son lien ici. Les vues sont suivies automatiquement.</p>
         <form action={submitClip.bind(null, id)} className="grid gap-3 sm:grid-cols-[1fr_260px_auto]">
           <input name="url" required placeholder="https://www.tiktok.com/@toi/video/… ou youtube.com/shorts/…" className="input" />
@@ -61,14 +61,14 @@ export default async function Page({ params, searchParams }: { params: Promise<{
 
       {workspace.productUrl && (
         <div className="card">
-          <h2 className="mb-1 font-semibold">Ton lien traqué</h2>
+          <h2 className="mb-1 font-display text-lg font-bold">Ton lien traqué</h2>
           <p className="mb-3 text-sm text-zinc-500">Mets-le en bio ou en description : le créateur voit combien de visiteurs tu lui envoies.</p>
           <input readOnly value={trackedLink} className="input font-mono" />
         </div>
       )}
 
       <div>
-        <h2 className="mb-3 text-lg font-semibold">Moments à clipper</h2>
+        <h2 className="mb-3 font-display text-xl font-bold">Moments à clipper</h2>
         {mine.length + free.length === 0 ? (
           <Empty>Aucun moment proposé pour l&apos;instant. Tu peux quand même envoyer des clips libres.</Empty>
         ) : (
@@ -93,7 +93,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
       </div>
 
       <div>
-        <h2 className="mb-3 text-lg font-semibold">Mes clips</h2>
+        <h2 className="mb-3 font-display text-xl font-bold">Mes clips</h2>
         {clips.length === 0 ? (
           <Empty>Tu n&apos;as encore envoyé aucun clip.</Empty>
         ) : (
@@ -118,7 +118,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
       </div>
 
       <div className="card max-w-xl">
-        <h2 className="mb-1 font-semibold">Mes coordonnées de paiement</h2>
+        <h2 className="mb-1 font-display text-lg font-bold">Mes coordonnées de paiement</h2>
         <p className="mb-3 text-sm text-zinc-500">Visibles uniquement par le créateur de l&apos;équipe.</p>
         <form action={updatePayoutInfo.bind(null, id)} className="grid gap-3 sm:grid-cols-[120px_1fr_auto]">
           <select name="method" defaultValue={membership.payoutMethod ?? "IBAN"} className="input">

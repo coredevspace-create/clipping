@@ -23,7 +23,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
     <div className="space-y-6">
       <Flash sp={sp} />
       <div className="card">
-        <h3 className="font-semibold">Lien d&apos;invitation</h3>
+        <h3 className="font-display text-lg font-bold">Lien d&apos;invitation</h3>
         <p className="mb-3 text-sm text-zinc-500">
           Partage-le sur ton Discord, ton Telegram ou en message privé. {members.length}/{Number.isFinite(plan.maxClippers) ? plan.maxClippers : "∞"} clippeurs (offre {plan.label}).
         </p>
@@ -53,7 +53,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
                     <td className="text-right">{m.clips.filter((c) => c.status === "FLAGGED").length || "—"}</td>
                     <td className="text-right">{workspace.productUrl ? m._count.clicks : "—"}</td>
                     <td className="text-right font-semibold">{euros(due)}</td>
-                    <td className="text-xs">{m.payoutMethod ? <span className="text-emerald-700">{m.payoutMethod} ✓</span> : <span className="text-amber-700">Non renseigné</span>}</td>
+                    <td className="text-xs">{m.payoutMethod ? <span className="text-brand-700">{m.payoutMethod} ✓</span> : <span className="text-amber-700">Non renseigné</span>}</td>
                     <td className="text-right">
                       <form action={removeMember.bind(null, id, m.id)}><button className="btn-danger">Retirer</button></form>
                     </td>

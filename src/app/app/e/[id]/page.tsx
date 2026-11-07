@@ -75,7 +75,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
               {clips.map((c) => {
                 const eng = c.views ? ((c.likes + c.comments + c.shares) / c.views) * 100 : 0;
                 return (
-                  <tr key={c.id} className={c.status === "FLAGGED" ? "bg-red-50/50" : ""}>
+                  <tr key={c.id} className={c.status === "FLAGGED" ? "bg-coral/5" : ""}>
                     <td>
                       <Link href={`/app/e/${id}/clips/${c.id}`} className="font-medium text-brand-700 hover:underline">
                         {PLATFORM_LABELS[c.platform as Platform]}
@@ -84,7 +84,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
                     </td>
                     <td>{c.membership.user.name}</td>
                     <td className="text-right font-mono">{num(c.views)}</td>
-                    <td className="text-right font-mono text-xs">{c.views ? `${eng.toFixed(1)} %` : "—"}</td>
+                    <td className="text-right font-mono text-xs">{c.views ? `${eng.toLocaleString("fr-FR", { maximumFractionDigits: 1 })} %` : "—"}</td>
                     <td><FraudBadge score={c.fraudScore} threshold={workspace.fraudThreshold} /></td>
                     <td><StatusBadge status={c.status} /></td>
                     <td className="whitespace-nowrap text-right">

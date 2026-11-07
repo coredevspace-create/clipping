@@ -2,6 +2,10 @@
 import { execSync } from "node:child_process";
 import { resolveDbEnv } from "./db-env.mjs";
 
+// en local, charger .env (sur Vercel les variables sont déjà injectées)
+try {
+  process.loadEnvFile?.(".env");
+} catch {}
 const env = resolveDbEnv({ ...process.env });
 if (!env.DATABASE_URL) {
   console.error(

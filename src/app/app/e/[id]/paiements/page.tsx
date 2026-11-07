@@ -30,7 +30,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
       <div className="card">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h3 className="font-semibold">Prochain paiement : {euros(total)}</h3>
+            <h3 className="font-display text-lg font-bold">Prochain paiement : {euros(total)}</h3>
             <p className="text-sm text-zinc-500">
               {euros(workspace.cpmCents)} / 1 000 vues · dès {num(workspace.minViews)} vues · max {euros(workspace.maxPayoutPerClipCents)} par clip.
               {holding > 0 && ` ${holding} clip(s) encore dans le délai de vérification de ${workspace.holdDays} j (sauf validation manuelle).`}
@@ -63,7 +63,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         )}
       </div>
 
-      <h3 className="text-lg font-semibold">Historique</h3>
+      <h3 className="font-display text-xl font-bold">Historique</h3>
       {runs.length === 0 ? (
         <Empty>Aucun lot de paiement généré.</Empty>
       ) : (
@@ -87,7 +87,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
                       <td className="text-right font-semibold">{euros(p.amountCents)}</td>
                       <td className="text-right">
                         {p.status === "PAID" ? (
-                          <span className="text-xs text-emerald-700">Payé le {dateFr(p.paidAt)}</span>
+                          <span className="text-xs text-brand-700">Payé le {dateFr(p.paidAt)}</span>
                         ) : (
                           <form action={markPayoutPaid.bind(null, id, p.id)}><button className="btn-ghost">Marquer payé</button></form>
                         )}

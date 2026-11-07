@@ -14,7 +14,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
       <Flash sp={sp} />
       <form action={updateSettings.bind(null, id)} className="space-y-6">
         <div className="card space-y-4">
-          <h3 className="font-semibold">Produit</h3>
+          <h3 className="font-display text-lg font-bold">Produit</h3>
           <div><label className="label">Nom</label><input name="name" defaultValue={w.name} className="input" /></div>
           <div>
             <label className="label">URL du produit</label>
@@ -32,7 +32,7 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         </div>
 
         <div className="card space-y-2">
-          <h3 className="font-semibold">Anti-fraude</h3>
+          <h3 className="font-display text-lg font-bold">Anti-fraude</h3>
           <Field name="fraudThreshold" label="Score de mise en quarantaine (10 à 100)" value={String(w.fraudThreshold)} hint="Plus il est bas, plus l'anti-fraude est strict. 50 est un bon point de départ." />
         </div>
 

@@ -11,13 +11,80 @@ generator client {
 }
 
 model User {
-  id           String       @id @default(cuid())
-  email        String       @unique
+  id           String          @id @default(cuid())
+  email        String          @unique
   name         String
   passwordHash String
-  createdAt    DateTime     @default(now())
+  /// CREATOR | CLIPPER : détermine l'accueil et la navigation (un compte peut faire les deux)
+  role         String          @default("CREATOR")
+  createdAt    DateTime        @default(now())
   workspaces   Workspace[]
   memberships  Membership[]
+  profile      ClipperProfile?
+  applications Application[]
+  invitations  Invitation[]
+}
+
+/// L'annonce d'un clippeur : visible par les créateurs dans l'annuaire.
+model ClipperProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  headline  String
+  bio       String
+  /// Valeurs séparées par des virgules (voir NICHES / PLATFORM_LABELS)
+  niches    String   @default("")
+  platforms String   @default("")
+  /// Liens vers des clips ou comptes, un par ligne
+  portfolio String   @default("")
+  /// Discord, Telegram… visible uniquement par les créateurs avec qui il est en relation
+  contact   String?
+  available Boolean  @default(true)
+  updatedAt DateTime @updatedAt
+}
+
+/// L'annonce d'un créateur (une par équipe) : visible par tous les clippeurs.
+model Offer {
+  id           String        @id @default(cuid())
+  workspaceId  String        @unique
+  workspace    Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  title        String
+  description  String
+  niche        String
+  platforms    String        @default("")
+  requirements String?
+  status       String        @default("OPEN") // OPEN | CLOSED
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  applications Application[]
+}
+
+/// Candidature d'un clippeur à une annonce.
+model Application {
+  id        String   @id @default(cuid())
+  offerId   String
+  offer     Offer    @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message   String
+  status    String   @default("PENDING") // PENDING | ACCEPTED | REJECTED
+  createdAt DateTime @default(now())
+
+  @@unique([offerId, userId])
+}
+
+/// Invitation d'un créateur envoyée à un clippeur depuis l'annuaire.
+model Invitation {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message     String
+  status      String    @default("PENDING") // PENDING | ACCEPTED | DECLINED
+  createdAt   DateTime  @default(now())
+
+  @@unique([workspaceId, userId])
 }
 
 /// L'équipe d'un fondateur (un produit / une campagne de clipping).
@@ -45,6 +112,8 @@ model Workspace {
   clips                 Clip[]
   sources               Source[]
   payoutRuns            PayoutRun[]
+  offer                 Offer?
+  invitations           Invitation[]
 }
 
 model Membership {
