@@ -246,7 +246,7 @@ export default async function Home() {
           <Link href={startHref} className="btn-lime">Commencer gratuitement</Link>
           <Link href="/offres" className="text-[17px] text-[#2997ff] hover:underline">Je cherche des missions ›</Link>
         </div>
-        <div className="mx-auto mt-16 h-[260px] max-w-[760px] overflow-hidden rounded-t-[28px] sm:h-[380px]">
+        <div className={`mx-auto mt-16 max-w-[760px] overflow-hidden ${IMAGES.cta ? "aspect-[3/2]" : "h-[260px] rounded-t-[28px] sm:h-[380px]"}`}>
           <Visual src={IMAGES.cta} alt="Un smartphone sur une surface noire" fallback={<CtaGlow />} />
         </div>
       </section>

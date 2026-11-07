@@ -4,11 +4,11 @@
  */
 export const IMAGES: Record<"hero" | "probleme" | "lienIntelligent" | "antiFraude" | "clippeuse" | "cta" | "missions" | "og", string | null> = {
   hero: "/images/hero.webp", // IMG-01
-  probleme: null, // IMG-02 probleme.webp
+  probleme: "/images/probleme.webp", // IMG-02
   lienIntelligent: "/images/lien-intelligent.webp", // IMG-03
-  antiFraude: null, // IMG-04 anti-fraude.webp
+  antiFraude: "/images/anti-fraude.webp", // IMG-04
   clippeuse: "/images/clippeuse.webp", // IMG-05
-  cta: null, // IMG-06 cta.webp
-  missions: null, // IMG-07 missions.webp
-  og: null, // IMG-08 og.webp (1200×630)
+  cta: "/images/cta.webp", // IMG-06
+  missions: "/images/missions.webp", // IMG-07
+  og: "/images/og-bg.jpg", // IMG-08 : fond de src/app/opengraph-image.tsx
 };

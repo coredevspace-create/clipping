@@ -10,14 +10,12 @@ import { SessionWatcher } from "@/components/session-watcher";
 import { Avatar } from "@/components/market";
 import { currentUser } from "@/lib/auth";
 import { APP_NAME, appUrl } from "@/lib/config";
-import { IMAGES } from "@/lib/images";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl()),
-  openGraph: IMAGES.og ? { images: [{ url: IMAGES.og, width: 1200, height: 630 }] } : undefined,
   title: { default: `${APP_NAME} — Le clipping pour les apps et logiciels grand public`, template: `%s · ${APP_NAME}` },
   description: "Recrute des clippeurs pour ton app, vérifie chaque vue, bloque les bots et mesure le coût par téléchargement de chaque clippeur. Sans commission, en français.",
 };
