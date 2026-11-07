@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { requireMember, requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { addMember } from "@/lib/marketplace";
+import { OAUTH_PLATFORMS, PROVIDERS, type OAuthPlatform } from "@/lib/oauth/providers";
 import { parseClipUrl } from "@/lib/platforms";
 import { refreshClip } from "@/lib/tracking";
 import { done, fail, str } from "./util";
@@ -19,10 +20,15 @@ export async function joinWorkspace(inviteCode: string) {
 }
 
 export async function submitClip(workspaceId: string, fd: FormData) {
-  const { membership } = await requireMember(workspaceId);
+  const { user, membership, workspace } = await requireMember(workspaceId);
   const back = `/app/c/${workspaceId}`;
   const parsed = parseClipUrl(str(fd, "url"));
   if (!parsed.ok) fail(back, parsed.error);
+
+  if (workspace.requireVerifiedAccounts && OAUTH_PLATFORMS.includes(parsed.platform as OAuthPlatform) && PROVIDERS[parsed.platform as OAuthPlatform].configured()) {
+    const linked = await db.connectedAccount.count({ where: { userId: user.id, platform: parsed.platform } });
+    if (!linked) fail(back, `Cette équipe exige un compte vérifié : connecte ton compte ${PROVIDERS[parsed.platform as OAuthPlatform].label} dans « Comptes connectés ».`);
+  }
 
   const momentId = str(fd, "momentId") || null;
   if (momentId) {

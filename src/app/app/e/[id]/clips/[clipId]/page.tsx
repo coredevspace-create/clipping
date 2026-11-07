@@ -76,6 +76,17 @@ export default async function Page({ params, searchParams }: { params: Promise<{
               ))}
             </ul>
           )}
+          <div className="mt-4 space-y-1 border-t border-ink/10 pt-3 text-sm">
+            <div>
+              Propriété :{" "}
+              {clip.ownershipVerified === true ? <strong className="text-brand-700">✓ vidéo sur le compte connecté du clippeur</strong>
+                : clip.ownershipVerified === false ? <strong className="text-coral">✗ absente du compte connecté</strong>
+                : <span className="text-zinc-500">non vérifiée (compte non connecté)</span>}
+            </div>
+            {clip.audienceShare != null && (
+              <div>Audience francophone : <strong>{Math.round(clip.audienceShare * 100)} %</strong> des vues</div>
+            )}
+          </div>
           {clip.approvedOverride && <p className="mt-3 text-xs text-zinc-500">Validé manuellement malgré les signaux.</p>}
           <p className="mt-3 text-xs text-zinc-500">Seuil de quarantaine : {workspace.fraudThreshold}/100 (modifiable dans les réglages).</p>
         </div>

@@ -1,11 +1,11 @@
-import type { StatsProvider } from "./types";
+import type { ClipStats, StatsContext } from "./types";
 
 /**
  * Mode démo : simule une croissance de vues réaliste pour les plateformes pas encore branchées.
  * Environ 1 clip sur 5 simule une injection de vues par bots (pic brutal sans engagement),
  * pour voir l'anti-fraude en action. À n'utiliser qu'en local / démo.
  */
-export const demoProvider: StatsProvider = async ({ externalId, submittedAt, now }) => {
+export const demoProvider = async ({ externalId, submittedAt, now }: StatsContext): Promise<ClipStats | null> => {
   const h = hash(externalId);
   const hours = Math.max(0, (now.getTime() - submittedAt.getTime()) / 3_600_000);
   const potential = 2_000 + (h % 60_000); // plafond organique du clip

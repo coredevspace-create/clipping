@@ -38,6 +38,12 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         </p>
       </div>
       <Flash sp={sp} />
+      {workspace.requireVerifiedAccounts && (
+        <div className="rounded-2xl border border-ink/10 bg-lime/30 px-4 py-3 text-sm">
+          Cette équipe exige un <strong>compte vérifié</strong> pour TikTok, Instagram et YouTube.{" "}
+          <a href="/app/comptes" className="font-semibold underline">Connecter mes comptes →</a>
+        </div>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-3">
         <Stat label="Mes vues" value={num(clips.filter((c) => c.status !== "REJECTED").reduce((s, c) => s + c.views, 0))} />

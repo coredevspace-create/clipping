@@ -51,6 +51,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ e
     <section key="clipper" className="space-y-6">
       <PageTitle title="Espace clippeur" subtitle="Tes équipes, tes invitations et tes candidatures.">
         <div className="flex gap-2">
+          <Link href="/app/comptes" className="btn-ghost">Comptes connectés</Link>
           <Link href="/app/profil" className="btn-ghost">{me.profile ? "Mon annonce" : "Créer mon annonce"}</Link>
           <Link href="/offres" className="btn">Trouver des missions</Link>
         </div>

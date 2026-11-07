@@ -1,32 +1,56 @@
 import { db } from "./db";
 import { analyzeClip, median, nextStatus } from "./fraud";
+import { getAccess } from "./oauth/accounts";
+import { OAUTH_PLATFORMS, PROVIDERS, type OAuthPlatform } from "./oauth/providers";
 import type { Platform } from "./platforms";
 import { fetchClipStats } from "./views";
+import type { LinkedAccount } from "./views/types";
 
 type StatsInput = { views: number; likes: number; comments: number; shares: number; postedAt?: Date | null };
+type Verification = { ownershipVerified?: boolean | null; audienceShare?: number | null };
+
+/** Compte connecté du clippeur pour la plateforme du clip (jeton rafraîchi si besoin). */
+async function linkedAccount(userId: string, platform: string): Promise<LinkedAccount> {
+  if (!OAUTH_PLATFORMS.includes(platform as OAuthPlatform) || !PROVIDERS[platform as OAuthPlatform].configured()) return null;
+  return getAccess(userId, platform as OAuthPlatform);
+}
 
 /** Récupère les stats d'un clip via l'API, enregistre un relevé et relance l'analyse anti-fraude. */
 export async function refreshClip(clipId: string, now = new Date()) {
-  const clip = await db.clip.findUniqueOrThrow({ where: { id: clipId } });
+  const clip = await db.clip.findUniqueOrThrow({ where: { id: clipId }, include: { membership: { select: { userId: true } } } });
   if (clip.status === "REJECTED") return { skipped: true as const };
-  const stats = await fetchClipStats({
+  const result = await fetchClipStats({
     platform: clip.platform as Platform,
     externalId: clip.externalId,
     submittedAt: clip.createdAt,
     now,
+    account: await linkedAccount(clip.membership.userId, clip.platform),
   });
-  if (!stats) return { skipped: true as const };
-  await recordStats(clipId, stats, stats.source, now);
+  if (!result) return { skipped: true as const };
+  const verification = { ownershipVerified: result.ownershipVerified, audienceShare: result.audienceShare };
+  if (result.stats) {
+    await recordStats(clipId, result.stats, result.stats.source, now, verification);
+  } else {
+    // pas de stats mais une information de propriété (ex. vidéo absente du compte connecté)
+    await reevaluate(clipId, verification);
+  }
   return { skipped: false as const };
 }
 
 /** Enregistre des stats (API, démo ou saisie manuelle), puis recalcule le score de fraude et le statut. */
-export async function recordStats(clipId: string, stats: StatsInput, source: string, now = new Date()) {
-  const clip = await db.clip.findUniqueOrThrow({ where: { id: clipId }, include: { workspace: true } });
-
+export async function recordStats(clipId: string, stats: StatsInput, source: string, now = new Date(), verification: Verification = {}) {
   await db.viewSnapshot.create({
     data: { clipId, views: stats.views, likes: stats.likes, comments: stats.comments, shares: stats.shares, capturedAt: now },
   });
+  await reevaluate(clipId, verification, { ...stats, source, now });
+}
+
+/** Recalcule le score anti-fraude d'un clip à partir de ses relevés et des vérifications disponibles. */
+async function reevaluate(clipId: string, verification: Verification, fresh?: StatsInput & { source: string; now: Date }) {
+  const clip = await db.clip.findUniqueOrThrow({ where: { id: clipId }, include: { workspace: true } });
+  const ownershipVerified = verification.ownershipVerified !== undefined ? verification.ownershipVerified : clip.ownershipVerified;
+  const audience = verification.audienceShare ?? clip.audienceShare;
+  const stats: StatsInput = fresh ?? { views: clip.views, likes: clip.likes, comments: clip.comments, shares: clip.shares, postedAt: clip.postedAt };
 
   const [snapshots, otherClips] = await Promise.all([
     db.viewSnapshot.findMany({ where: { clipId }, orderBy: { capturedAt: "asc" } }),
@@ -38,11 +62,16 @@ export async function recordStats(clipId: string, stats: StatsInput, source: str
 
   const postedAt = stats.postedAt ?? clip.postedAt;
   const result = analyzeClip({
-    ...stats,
+    views: stats.views,
+    likes: stats.likes,
+    comments: stats.comments,
+    shares: stats.shares,
     snapshots,
     postedAt,
     submittedAt: clip.createdAt,
     clipperMedianViews: otherClips.length >= 3 ? median(otherClips.map((c) => c.views)) : null,
+    expectedAudienceShare: audience,
+    ownershipVerified,
   });
 
   await db.clip.update({
@@ -53,8 +82,9 @@ export async function recordStats(clipId: string, stats: StatsInput, source: str
       comments: stats.comments,
       shares: stats.shares,
       postedAt,
-      lastFetchedAt: now,
-      statsSource: source,
+      ...(fresh ? { lastFetchedAt: fresh.now, statsSource: fresh.source } : {}),
+      ownershipVerified,
+      audienceShare: audience,
       fraudScore: result.score,
       fraudReasons: JSON.stringify(result.reasons),
       status: nextStatus(clip.status, result.score, clip.workspace.fraudThreshold, clip.approvedOverride),

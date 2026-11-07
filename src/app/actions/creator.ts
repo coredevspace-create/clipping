@@ -40,7 +40,7 @@ export async function updateSettings(workspaceId: string, fd: FormData) {
   }
   await db.workspace.update({
     where: { id: workspaceId },
-    data: { name, productUrl: productUrl || null, cpmCents, maxPayoutPerClipCents, minViews, holdDays, fraudThreshold },
+    data: { name, productUrl: productUrl || null, cpmCents, maxPayoutPerClipCents, minViews, holdDays, fraudThreshold, requireVerifiedAccounts: fd.get("requireVerifiedAccounts") === "on" },
   });
   done(back, "Réglages enregistrés.");
 }

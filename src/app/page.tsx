@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Calculator } from "@/components/landing/calculator";
 import { HeroFeed } from "@/components/landing/hero-feed";
-import { Logo } from "@/components/logo";
 import { currentUser } from "@/lib/auth";
 import { APP_NAME, PLANS } from "@/lib/config";
 
@@ -339,12 +338,6 @@ export default async function Home() {
             <Link href="/offres" className="rounded-full px-5 py-3 font-medium text-paper/80 ring-1 ring-paper/20 hover:ring-paper/60">Je cherche des missions</Link>
           </div>
         </div>
-        <footer className="relative border-t border-paper/10">
-          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-8 text-sm text-paper/50">
-            <Logo dark />
-            <span>Fait en France, pour les créateurs francophones.</span>
-          </div>
-        </footer>
       </section>
     </div>
   );

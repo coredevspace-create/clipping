@@ -11,19 +11,39 @@ generator client {
 }
 
 model User {
-  id           String          @id @default(cuid())
-  email        String          @unique
+  id           String             @id @default(cuid())
+  email        String             @unique
   name         String
   passwordHash String
   /// CREATOR | CLIPPER : détermine l'accueil et la navigation (un compte peut faire les deux)
-  role         String          @default("CREATOR")
-  createdAt    DateTime        @default(now())
+  role         String             @default("CREATOR")
+  createdAt    DateTime           @default(now())
   workspaces   Workspace[]
   memberships  Membership[]
   profile      ClipperProfile?
   applications Application[]
   invitations  Invitation[]
   messages     Message[]
+  accounts     ConnectedAccount[]
+}
+
+/// Compte TikTok / Instagram / YouTube connecté par un clippeur (OAuth). Jetons chiffrés.
+model ConnectedAccount {
+  id             String    @id @default(cuid())
+  userId         String
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  platform       String // TIKTOK | INSTAGRAM | YOUTUBE
+  externalUserId String
+  username       String
+  accessToken    String // chiffré (AES-256-GCM)
+  refreshToken   String? // chiffré
+  expiresAt      DateTime?
+  scopes         String    @default("")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@unique([userId, platform])
+  @@index([platform, externalUserId])
 }
 
 /// L'annonce d'un clippeur : visible par les créateurs dans l'annuaire.
@@ -90,32 +110,34 @@ model Invitation {
 
 /// L'équipe d'un fondateur (un produit / une campagne de clipping).
 model Workspace {
-  id                    String       @id @default(cuid())
-  name                  String
-  ownerId               String
-  owner                 User         @relation(fields: [ownerId], references: [id])
-  inviteCode            String       @unique
-  plan                  String       @default("STARTER") // STARTER | PRO | AGENCE
+  id                      String       @id @default(cuid())
+  name                    String
+  ownerId                 String
+  owner                   User         @relation(fields: [ownerId], references: [id])
+  inviteCode              String       @unique
+  plan                    String       @default("STARTER") // STARTER | PRO | AGENCE
   /// URL du produit vers laquelle pointent les liens traqués des clippeurs
-  productUrl            String?
+  productUrl              String?
   /// Rémunération en centimes pour 1 000 vues
-  cpmCents              Int          @default(100)
+  cpmCents                Int          @default(100)
   /// Seuil minimum de vues pour qu'un clip soit rémunéré
-  minViews              Int          @default(1000)
+  minViews                Int          @default(1000)
   /// Plafond de rémunération par clip, en centimes
-  maxPayoutPerClipCents Int          @default(10000)
+  maxPayoutPerClipCents   Int          @default(10000)
   /// Délai avant qu'un clip non signalé soit validé automatiquement
-  holdDays              Int          @default(7)
+  holdDays                Int          @default(7)
   /// Score de fraude (0-100) à partir duquel un clip est mis en quarantaine
-  fraudThreshold        Int          @default(50)
-  createdAt             DateTime     @default(now())
-  memberships           Membership[]
-  clips                 Clip[]
-  sources               Source[]
-  payoutRuns            PayoutRun[]
-  offer                 Offer?
-  invitations           Invitation[]
-  messages              Message[]
+  fraudThreshold          Int          @default(50)
+  /// Exiger que le clippeur ait connecté son compte de la plateforme pour soumettre un clip
+  requireVerifiedAccounts Boolean      @default(false)
+  createdAt               DateTime     @default(now())
+  memberships             Membership[]
+  clips                   Clip[]
+  sources                 Source[]
+  payoutRuns              PayoutRun[]
+  offer                   Offer?
+  invitations             Invitation[]
+  messages                Message[]
 }
 
 model Membership {
@@ -167,35 +189,39 @@ model Moment {
 }
 
 model Clip {
-  id               String         @id @default(cuid())
-  workspaceId      String
-  workspace        Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  membershipId     String
-  membership       Membership     @relation(fields: [membershipId], references: [id])
-  momentId         String?
-  moment           Moment?        @relation(fields: [momentId], references: [id])
-  url              String
-  platform         String // YOUTUBE | TIKTOK | INSTAGRAM | X
-  externalId       String
+  id                String         @id @default(cuid())
+  workspaceId       String
+  workspace         Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  membershipId      String
+  membership        Membership     @relation(fields: [membershipId], references: [id])
+  momentId          String?
+  moment            Moment?        @relation(fields: [momentId], references: [id])
+  url               String
+  platform          String // YOUTUBE | TIKTOK | INSTAGRAM | X
+  externalId        String
   /// PENDING (en vérification) | FLAGGED (suspect) | APPROVED | REJECTED
-  status           String         @default("PENDING")
-  views            Int            @default(0)
-  likes            Int            @default(0)
-  comments         Int            @default(0)
-  shares           Int            @default(0)
-  postedAt         DateTime?
-  lastFetchedAt    DateTime?
-  statsSource      String? // API | DEMO | MANUAL
-  fraudScore       Int            @default(0)
+  status            String         @default("PENDING")
+  views             Int            @default(0)
+  likes             Int            @default(0)
+  comments          Int            @default(0)
+  shares            Int            @default(0)
+  postedAt          DateTime?
+  lastFetchedAt     DateTime?
+  statsSource       String? // API | DEMO | MANUAL
+  fraudScore        Int            @default(0)
   /// JSON : [{ code, label, points }]
-  fraudReasons     String         @default("[]")
+  fraudReasons      String         @default("[]")
   /// Le créateur a validé le clip malgré un signalement
-  approvedOverride Boolean        @default(false)
-  paidViews        Int            @default(0)
-  paidCents        Int            @default(0)
-  createdAt        DateTime       @default(now())
-  snapshots        ViewSnapshot[]
-  payoutLines      PayoutLine[]
+  approvedOverride  Boolean        @default(false)
+  /// true : la vidéo est bien sur le compte connecté du clippeur ; false : elle n'y est pas ; null : non vérifiable
+  ownershipVerified Boolean?
+  /// Part des vues venant des pays francophones ciblés (0..1), si la plateforme la fournit
+  audienceShare     Float?
+  paidViews         Int            @default(0)
+  paidCents         Int            @default(0)
+  createdAt         DateTime       @default(now())
+  snapshots         ViewSnapshot[]
+  payoutLines       PayoutLine[]
 
   @@unique([workspaceId, platform, externalId])
 }

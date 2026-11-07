@@ -35,6 +35,13 @@ export default async function Page({ params, searchParams }: { params: Promise<{
         <div className="card space-y-2">
           <h3 className="font-display text-lg font-bold">Anti-fraude</h3>
           <Field name="fraudThreshold" label="Score de mise en quarantaine (10 à 100)" value={String(w.fraudThreshold)} hint="Plus il est bas, plus l'anti-fraude est strict. 50 est un bon point de départ." />
+          <label className="flex items-start gap-3 pt-2 text-sm">
+            <input type="checkbox" name="requireVerifiedAccounts" defaultChecked={w.requireVerifiedAccounts} className="mt-0.5 h-4 w-4" />
+            <span>
+              <strong>Exiger un compte vérifié</strong> pour soumettre un clip TikTok, Instagram ou YouTube.
+              <span className="block text-xs text-zinc-500">Le clippeur doit connecter son compte : ses vues sont lues directement chez la plateforme et il ne peut pas réclamer la vidéo de quelqu&apos;un d&apos;autre.</span>
+            </span>
+          </label>
         </div>
 
         <div className="card text-sm text-zinc-600">

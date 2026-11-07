@@ -21,6 +21,8 @@ export type FraudInput = {
   clipperMedianViews?: number | null;
   /** Part de l'audience venant des pays attendus (ex. FR/BE/CH/CA), disponible via OAuth. 0..1 */
   expectedAudienceShare?: number | null;
+  /** false : la vidéo n'est pas sur le compte connecté du clippeur (via OAuth) */
+  ownershipVerified?: boolean | null;
 };
 
 export type FraudReason = { code: string; label: string; points: number };
@@ -88,6 +90,11 @@ export function analyzeClip(input: FraudInput): FraudResult {
   // 5. Audience géographique (seulement si le clippeur a connecté son compte) : contenu FR vu hors francophonie.
   if (input.expectedAudienceShare != null && input.views >= 1000 && input.expectedAudienceShare < 0.4) {
     add("GEO_MISMATCH", `Seulement ${pct(input.expectedAudienceShare)} de l'audience vient des pays ciblés.`, 35);
+  }
+
+  // 6. Propriété : la vidéo n'est pas publiée sur le compte que le clippeur a connecté.
+  if (input.ownershipVerified === false) {
+    add("NOT_OWNER", "La vidéo n'est pas publiée sur le compte connecté par ce clippeur (clip possiblement réclamé à la place de quelqu'un d'autre).", 60);
   }
 
   const score = Math.min(100, reasons.reduce((s, r) => s + r.points, 0));

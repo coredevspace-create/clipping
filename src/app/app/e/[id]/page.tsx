@@ -81,7 +81,11 @@ export default async function Page({ params, searchParams }: { params: Promise<{
                       <Link href={`/app/e/${id}/clips/${c.id}`} className="font-medium text-brand-700 hover:underline">
                         {PLATFORM_LABELS[c.platform as Platform]}
                       </Link>
-                      <div className="text-xs text-zinc-500">{dateFr(c.createdAt)}</div>
+                      <div className="text-xs text-zinc-500">
+                        {dateFr(c.createdAt)}
+                        {c.ownershipVerified === true && <span className="ml-2 font-semibold text-brand-700">✓ compte vérifié</span>}
+                        {c.ownershipVerified === false && <span className="ml-2 font-semibold text-coral">✗ pas son compte</span>}
+                      </div>
                     </td>
                     <td>{c.membership.user.name}</td>
                     <td className="text-right font-mono">{num(c.views)}</td>

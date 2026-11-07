@@ -23,3 +23,18 @@ export function appUrl(env: Record<string, string | undefined> = process.env) {
   const url = env.APP_URL || (vercel ? `https://${vercel}` : "http://localhost:3000");
   return url.replace(/\/$/, "");
 }
+
+/**
+ * Informations légales affichées dans les mentions légales, la politique de confidentialité et les CGU.
+ * ⚠️ À COMPLÉTER avant de soumettre les demandes d'accès aux API (TikTok, Meta, Google les vérifient).
+ * Modifiables aussi par variables d'environnement sur Vercel.
+ */
+export const LEGAL = {
+  company: process.env.LEGAL_COMPANY || "[Nom de la société — à compléter]",
+  form: process.env.LEGAL_FORM || "[Forme juridique et capital — à compléter]",
+  address: process.env.LEGAL_ADDRESS || "[Adresse du siège — à compléter]",
+  siren: process.env.LEGAL_SIREN || "[SIREN / RCS — à compléter]",
+  director: process.env.LEGAL_DIRECTOR || "[Directeur de la publication — à compléter]",
+  email: process.env.LEGAL_EMAIL || "[contact@ton-domaine.fr — à compléter]",
+  updatedAt: "7 novembre 2026",
+};
