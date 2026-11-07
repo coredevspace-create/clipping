@@ -13,6 +13,13 @@ export function planOf(plan: string) {
   return PLANS[(plan in PLANS ? plan : "STARTER") as PlanKey];
 }
 
-export function appUrl() {
-  return (process.env.APP_URL ?? "http://localhost:3000").replace(/\/$/, "");
+/**
+ * Adresse publique du site (liens d'invitation, liens traqués).
+ * Ordre : APP_URL si défini (ex. nom de domaine perso), sinon l'adresse de production fournie
+ * automatiquement par Vercel, sinon localhost en développement.
+ */
+export function appUrl(env: Record<string, string | undefined> = process.env) {
+  const vercel = env.VERCEL_PROJECT_PRODUCTION_URL ?? env.VERCEL_URL;
+  const url = env.APP_URL || (vercel ? `https://${vercel}` : "http://localhost:3000");
+  return url.replace(/\/$/, "");
 }

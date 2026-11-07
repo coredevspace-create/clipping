@@ -29,11 +29,10 @@ Compte environ 15 minutes. Tout se fait depuis le navigateur.
 4. Ouvre l'onglet **Deployments**, clique sur les **⋯** du dernier déploiement, puis sur **Redeploy**.
    Pendant le build, les tables sont créées automatiquement.
 
-## 3. Renseigner l'adresse du site
+## 3. Adresse du site
 
-1. Récupère l'adresse publique en haut du projet, par exemple `https://clipping-xxx.vercel.app`.
-2. Va dans **Settings → Environment Variables** et ajoute `APP_URL` avec cette adresse, sans `/` à la fin. Elle sert aux liens d'invitation et aux liens traqués.
-3. Relance un déploiement avec **Redeploy**.
+Rien à faire : l'adresse Vercel est détectée automatiquement pour les liens d'invitation.
+Si tu ajoutes ton propre nom de domaine, ajoute la variable `APP_URL` (ex. `https://clipsquad.fr`).
 
 ## 4. Relevé automatique des vues
 
