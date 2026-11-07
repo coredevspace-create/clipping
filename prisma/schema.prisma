@@ -1,0 +1,183 @@
+// SQLite en local. En production : provider = "postgresql" et DATABASE_URL vers Postgres.
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String       @id @default(cuid())
+  email        String       @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime     @default(now())
+  workspaces   Workspace[]
+  memberships  Membership[]
+}
+
+/// L'équipe d'un fondateur (un produit / une campagne de clipping).
+model Workspace {
+  id                    String       @id @default(cuid())
+  name                  String
+  ownerId               String
+  owner                 User         @relation(fields: [ownerId], references: [id])
+  inviteCode            String       @unique
+  plan                  String       @default("STARTER") // STARTER | PRO | AGENCE
+  /// URL du produit vers laquelle pointent les liens traqués des clippeurs
+  productUrl            String?
+  /// Rémunération en centimes pour 1 000 vues
+  cpmCents              Int          @default(100)
+  /// Seuil minimum de vues pour qu'un clip soit rémunéré
+  minViews              Int          @default(1000)
+  /// Plafond de rémunération par clip, en centimes
+  maxPayoutPerClipCents Int          @default(10000)
+  /// Délai avant qu'un clip non signalé soit validé automatiquement
+  holdDays              Int          @default(7)
+  /// Score de fraude (0-100) à partir duquel un clip est mis en quarantaine
+  fraudThreshold        Int          @default(50)
+  createdAt             DateTime     @default(now())
+  memberships           Membership[]
+  clips                 Clip[]
+  sources               Source[]
+  payoutRuns            PayoutRun[]
+}
+
+model Membership {
+  id            String      @id @default(cuid())
+  workspaceId   String
+  workspace     Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
+  status        String      @default("ACTIVE") // ACTIVE | REMOVED
+  /// Code du lien traqué personnel : /r/<trackingCode>
+  trackingCode  String      @unique
+  payoutMethod  String? // IBAN | PAYPAL
+  payoutDetails String?
+  createdAt     DateTime    @default(now())
+  clips         Clip[]
+  reservations  Moment[]
+  clicks        LinkClick[]
+  payouts       Payout[]
+
+  @@unique([workspaceId, userId])
+}
+
+/// Contenu long (épisode, live, interview, démo produit) dans lequel les clippeurs piochent.
+model Source {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  title       String
+  url         String
+  notes       String?
+  createdAt   DateTime  @default(now())
+  moments     Moment[]
+}
+
+/// Un passage à clipper. Un clippeur le réserve pour éviter les doublons.
+model Moment {
+  id           String      @id @default(cuid())
+  sourceId     String
+  source       Source      @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  title        String
+  startSec     Int
+  endSec       Int
+  notes        String?
+  reservedById String?
+  reservedBy   Membership? @relation(fields: [reservedById], references: [id])
+  reservedAt   DateTime?
+  createdAt    DateTime    @default(now())
+  clips        Clip[]
+}
+
+model Clip {
+  id               String         @id @default(cuid())
+  workspaceId      String
+  workspace        Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  membershipId     String
+  membership       Membership     @relation(fields: [membershipId], references: [id])
+  momentId         String?
+  moment           Moment?        @relation(fields: [momentId], references: [id])
+  url              String
+  platform         String // YOUTUBE | TIKTOK | INSTAGRAM | X
+  externalId       String
+  /// PENDING (en vérification) | FLAGGED (suspect) | APPROVED | REJECTED
+  status           String         @default("PENDING")
+  views            Int            @default(0)
+  likes            Int            @default(0)
+  comments         Int            @default(0)
+  shares           Int            @default(0)
+  postedAt         DateTime?
+  lastFetchedAt    DateTime?
+  statsSource      String? // API | DEMO | MANUAL
+  fraudScore       Int            @default(0)
+  /// JSON : [{ code, label, points }]
+  fraudReasons     String         @default("[]")
+  /// Le créateur a validé le clip malgré un signalement
+  approvedOverride Boolean        @default(false)
+  paidViews        Int            @default(0)
+  paidCents        Int            @default(0)
+  createdAt        DateTime       @default(now())
+  snapshots        ViewSnapshot[]
+  payoutLines      PayoutLine[]
+
+  @@unique([workspaceId, platform, externalId])
+}
+
+model ViewSnapshot {
+  id         String   @id @default(cuid())
+  clipId     String
+  clip       Clip     @relation(fields: [clipId], references: [id], onDelete: Cascade)
+  views      Int
+  likes      Int
+  comments   Int
+  shares     Int
+  capturedAt DateTime @default(now())
+
+  @@index([clipId, capturedAt])
+}
+
+model LinkClick {
+  id           String     @id @default(cuid())
+  membershipId String
+  membership   Membership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+  visitorHash  String
+  createdAt    DateTime   @default(now())
+
+  @@index([membershipId, createdAt])
+}
+
+model PayoutRun {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  totalCents  Int
+  createdAt   DateTime  @default(now())
+  payouts     Payout[]
+}
+
+model Payout {
+  id           String       @id @default(cuid())
+  runId        String
+  run          PayoutRun    @relation(fields: [runId], references: [id], onDelete: Cascade)
+  membershipId String
+  membership   Membership   @relation(fields: [membershipId], references: [id])
+  amountCents  Int
+  views        Int
+  status       String       @default("PENDING") // PENDING | PAID
+  paidAt       DateTime?
+  lines        PayoutLine[]
+}
+
+model PayoutLine {
+  id          String @id @default(cuid())
+  payoutId    String
+  payout      Payout @relation(fields: [payoutId], references: [id], onDelete: Cascade)
+  clipId      String
+  clip        Clip   @relation(fields: [clipId], references: [id])
+  views       Int
+  amountCents Int
+}
